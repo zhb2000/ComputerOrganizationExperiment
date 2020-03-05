@@ -4,7 +4,7 @@ module NPC(PC, NPCOp, IMM, NPC);  // next pc module
     
    input  [31:0] PC;        // pc
    input  [1:0]  NPCOp;     // next pc operation
-   input  [25:0] IMM;       // immediate
+   input  [25:0] IMM;       // 26-bit immediate
    output reg [31:0] NPC;   // next pc
    
    wire [31:0] PCPLUS4;//the value of PC + 4
