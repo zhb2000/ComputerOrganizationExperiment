@@ -42,7 +42,7 @@ module Control(
                 `FUNCT_SUBU: ALUOp <= `ALU_SUB;
             endcase
         end
-        else if (opcode == `OPCODE_ADDi)
+        else if (opcode == `OPCODE_ADDI)
             ALUOp <= `ALU_ADD;
         else if (opcode == `OPCODE_ORI)
             ALUOp <= `ALU_OR;
