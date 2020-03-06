@@ -1,16 +1,20 @@
 //Instruction Register
-module InsReg(clk, rst, IRWr, iMemOut, inst);
-    input clk;
+module InsReg(/*clk,*/ rst, IRWr, iMemOut, inst);
+    // input clk;
     input rst;
     input IRWr;
     input[31:0] iMemOut;
     output reg[31:0] inst;
     
-    always @(posedge clk or posedge rst) 
+    always @(posedge rst)
     begin
-        if(rst)
-            inst <= 0;
-        else if (IRWr)
-            inst <= iMemOut;
+        inst = 0;
+    end
+
+    always @(*) 
+    begin
+        if (!rst && IRWr)
+            inst = iMemOut;
+        //$display("insReg: inst = 0x%8h", inst);//debug
     end
 endmodule // InsReg

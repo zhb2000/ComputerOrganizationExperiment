@@ -1,3 +1,4 @@
+`include "ctrl_encode_def.v"
 module CPU(clk, rst);
     input clk;//clock signal
     input rst;//reset signal
@@ -38,7 +39,7 @@ module CPU(clk, rst);
     wire[4:0] rfAddr3;//write register address
 
     wire EXTOp;
-    assign EXTOp = 1;
+    assign EXTOp = `EXT_SIGNED;
     wire[31:0] imm32;
     wire[31:0] operand2;//ALU's second operand
     wire[31:0] aluResult;
@@ -57,8 +58,7 @@ module CPU(clk, rst);
           .PC(PC));
         
     InsMem insMem(.address(PC), .dout(iMemOut));
-    InsReg insReg(.clk(clk), 
-                  .rst(rst), 
+    InsReg insReg(.rst(rst), 
                   .IRWr(IRWr), 
                   .iMemOut(iMemOut), 
                   .inst(inst));    
@@ -107,7 +107,8 @@ module CPU(clk, rst);
     
     PCSrc pcsrc(.Jump(Jump), .Branch(Branch), .Zero(Zero), .NPCOp(NPCOp));
 
-    NPC npc(.PC(PC), 
+    NPC npc(.rst(rst),
+            .PC(PC), 
             .NPCOp(NPCOp), 
             .IMM(imm26), 
             .NPC(NPC));

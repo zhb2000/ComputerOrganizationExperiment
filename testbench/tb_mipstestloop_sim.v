@@ -15,7 +15,7 @@ module tb_mipstestloop_sim();
             $display("im[%d] = 0x%8h", i, cpu.insMem.insMem[i]);
         i = 0;
         
-        $monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst); 
+        //$monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst); 
     end
 
     initial
@@ -31,18 +31,10 @@ module tb_mipstestloop_sim();
     end
 
     always
-        #5 clk = ~clk; 
-         
-
-    // always
-    // begin
-    //     #(20) clk = ~clk; 
-    //     i = i + 1;
-    //     if(clk)
-    //         $display("PC = 0x%8h, instruction = 0x%8h, rst: %1b, clk: %1b", cpu.insMem.address, cpu.inst, rst, clk);
-    //     if (i/2==20)
-    //         $stop();
-    // end
+    begin
+        #5 clk = ~clk;
+        $display("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
+    end
         
 
 

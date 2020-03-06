@@ -9,10 +9,12 @@ module DataMem(clk, DMWr, address, din, dout);
     reg [31:0] dataMem [1023:0];//data memory(with 1023 32bit cells)
 
     always @(posedge clk) 
-    begin
         if (DMWr)
-            dataMem[address[9:0]] <= din;//only use 10bit address  
-    end
+        begin
+            dataMem[address[11:2]] <= din;//only use 10bit address
+            $display("m[%d / 4 = %d] = %d,", address, address[11:2], din);
+        end
+            
 
-    assign dout = dataMem[address[9:0]];//only use 10bit address
+    assign dout = dataMem[address[11:2]];//only use 10bit address
 endmodule // DataMem

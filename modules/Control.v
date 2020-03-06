@@ -40,6 +40,7 @@ module Control(
                 `FUNCT_SLTU: ALUOp <= `ALU_SLTU;
                 `FUNCT_ADDU: ALUOp <= `ALU_ADD;
                 `FUNCT_SUBU: ALUOp <= `ALU_SUB;
+                `FUNCT_NOP: ALUOp <= `ALU_NOP;
             endcase
         end
         else if (opcode == `OPCODE_ADDI)
@@ -55,8 +56,8 @@ module Control(
         //MemWrite
         MemWrite <= (opcode == `OPCODE_SW);
         //ALUSrc
-        ALUSrc <= (opcode == `OPCODE_R 
-                || opcode == `OPCODE_BEQ);
+        ALUSrc <= (opcode == `OPCODE_R || opcode == `OPCODE_BEQ)
+                  ? 0 : 1;
         //RegWrite
         RegWrite <= (opcode == `OPCODE_R 
                   || opcode == `OPCODE_ADDI 

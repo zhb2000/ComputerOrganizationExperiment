@@ -3,7 +3,6 @@
 `define NPC_BRANCH  2'b01
 `define NPC_JUMP    2'b10
 
-
 // ALU control signal(ALUOp)
 `define ALU_NOP   3'b000 
 `define ALU_ADD   3'b001
@@ -12,6 +11,10 @@
 `define ALU_OR    3'b100
 `define ALU_SLT   3'b101
 `define ALU_SLTU  3'b110
+
+// EXTOp
+`define EXT_ZERO 1'b0
+`define EXT_SIGNED 1'b1
 
 // instruction opcode
 `define OPCODE_ADDI 6'h8 // addi
@@ -32,3 +35,4 @@
 `define FUNCT_SLTU 6'h2B // sltu
 `define FUNCT_ADDU 6'h21 // addu
 `define FUNCT_SUBU 6'h23 // subu
+`define FUNCT_NOP 6'h0 // nop TODO
