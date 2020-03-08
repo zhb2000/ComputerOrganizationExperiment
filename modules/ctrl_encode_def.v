@@ -23,6 +23,7 @@
 `define OPCODE_LW 6'h23 // lw
 `define OPCODE_SW 6'h2B // sw
 `define OPCODE_BEQ 6'h4 // beq
+`define OPCODE_BNE 6'h5 // bne
 `define OPCODE_J 6'h2 // j
 `define OPCODE_JAL 6'h3 // jal
 `define OPCODE_R_JR_JALR 6'h0 // R-R instruction, jr, jalr

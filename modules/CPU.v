@@ -5,7 +5,7 @@ module CPU(clk, rst);
 
     wire[1:0] RegDst;//select the write reg
     wire[1:0] Jump;//jump type, use what to write PC
-    wire Branch;
+    wire[1:0] Branch;//branch type, equal or not equal
     wire[1:0] RegSrc;//select RF's write data
     wire[2:0] ALUOp;    
     wire MemWrite;//DataMem's write signal
@@ -73,7 +73,7 @@ module CPU(clk, rst);
                     .ALUSrc(ALUSrc), 
                     .RegWrite(RegWrite));
 
-    mux4 #(5) selWriteReg(.d0(rt), .d1(rd), .d2(31), .d3(0),
+    mux4 #(5) selWriteReg(.d0(rt), .d1(rd), .d2(5'd31), .d3(5'bz),
                           .s(RegDst),
                           .y(rfAddr3));
         
@@ -101,7 +101,7 @@ module CPU(clk, rst);
                     .din(rfReadData2), 
                     .dout(dmReadData));
 
-    mux4 #(32) selRFWriteData(.d0(aluResult), .d1(dmReadData), .d2(PC + 4), .d3(0),
+    mux4 #(32) selRFWriteData(.d0(aluResult), .d1(dmReadData), .d2(PC + 4), .d3(32'bz),
                               .s(RegSrc),
                               .y(rfWriteData));
     

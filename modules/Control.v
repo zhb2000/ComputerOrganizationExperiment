@@ -9,8 +9,9 @@ module Control(
     //jump type, use what to write PC
     //0: not jump, 1: use imm26, 2: use reg
     output reg[1:0] Jump,
-    //is a branch-inst
-    output reg Branch,
+    //branch type, equal or not equal
+    //0: not branch, 1: beq, 2: bne
+    output reg[1:0] Branch,
     //select RF's write data
     //0: ALU result, 1: DataMem's dout, 3: pc+4
     output reg[1:0] RegSrc,
@@ -54,7 +55,12 @@ module Control(
             Jump <= 2'd0;
         
         //Branch
-        Branch <= (opcode == `OPCODE_BEQ);
+        if (opcode == `OPCODE_BEQ)
+            Branch <= 2'd1;
+        else if (opcode == `OPCODE_BNE)
+            Branch <= 2'd2;
+        else
+            Branch <= 2'd0;
         
         //RegSrc
         if (opcode == `OPCODE_LW)
@@ -87,7 +93,7 @@ module Control(
             ALUOp <= `ALU_OR;
         else if (opcode == `OPCODE_LW || opcode == `OPCODE_SW)
             ALUOp <= `ALU_ADD;
-        else if (opcode == `OPCODE_BEQ)
+        else if (opcode == `OPCODE_BEQ || opcode == `OPCODE_BNE)
             ALUOp <= `ALU_SUB;
         else
             ALUOp <= `ALU_NOP;
@@ -96,8 +102,9 @@ module Control(
         MemWrite <= (opcode == `OPCODE_SW);
         
         //ALUSrc
-        ALUSrc <= (opcode == `OPCODE_R_JR_JALR || opcode == `OPCODE_BEQ)
-                  ? 1'b0 : 1'b1;
+        ALUSrc <= (opcode == `OPCODE_R_JR_JALR 
+                || opcode == `OPCODE_BEQ 
+                || opcode == `OPCODE_BNE) ? 1'b0 : 1'b1;
         
         //RegWrite
         RegWrite <= ((opcode == `OPCODE_R_JR_JALR && funct != `FUNCT_JR && funct != `FUNCT_JALR)
