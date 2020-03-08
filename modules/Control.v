@@ -1,15 +1,28 @@
 `include "ctrl_encode_def.v"
 //Center Control of MIPS CPU
 module Control(
-    input[31:0] inst, //32bit instruction
-    output reg RegDst,//0: rt as write reg; 1: rd as write reg
-    output reg Jump,//is a jump-inst
-    output reg Branch,//is a branch-inst
-    output reg MemtoReg,//0: ALU result as RF's WD; 1: DataMem's dout as RF's WD;
-    output reg[2:0] ALUOp,//will be sent to ALU
-    output reg MemWrite,//write data into DataMem
-    output reg ALUSrc,//0: choose RD2 from RF; //1: choose Imm32 from EXT
-    output reg RegWrite//write data into RF or not
+    //32bit instruction
+    input[31:0] inst,
+    //select the write reg
+    //0: rt, 1: rd, 2: $31
+    output reg[1:0] RegDst,
+    //jump type, use what to write PC
+    //0: not jump, 1: use imm26, 2: use reg
+    output reg[1:0] Jump,
+    //is a branch-inst
+    output reg Branch,
+    //select RF's write data
+    //0: ALU result, 1: DataMem's dout, 3: pc+4
+    output reg[1:0] RegSrc,
+    //will be sent to ALU
+    output reg[2:0] ALUOp,
+    //DataMem's write signal
+    output reg MemWrite,
+    //choose ALU's operand
+    //0: RD2 from RF; //1: Imm32 from EXT
+    output reg ALUSrc,
+    //RF's write signal
+    output reg RegWrite
 );
     
     wire[5:0] opcode;
@@ -21,15 +34,40 @@ module Control(
     always @(*) 
     begin
         //RegDst
-        RegDst <= (opcode == `OPCODE_R);
+        if (opcode == `OPCODE_R_JR_JALR 
+            && funct != `FUNCT_JR && funct != `FUNCT_JALR)
+            RegDst <= 2'd1;
+        else if (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR)
+            RegDst <= 2'd1;
+        else if (opcode == `OPCODE_JAL)
+            RegDst <= 2'd2;
+        else
+            RegDst <= 2'd0;
+        
         //Jump
-        Jump <= (opcode == `OPCODE_J);
+        if (opcode == `OPCODE_J || opcode == `OPCODE_JAL)
+            Jump <= 2'd1;
+        else if(opcode == `OPCODE_R_JR_JALR 
+            && (funct == `FUNCT_JR || funct == `FUNCT_JALR))
+            Jump <= 2'd2;
+        else
+            Jump <= 2'd0;
+        
         //Branch
         Branch <= (opcode == `OPCODE_BEQ);
-        //MemtoReg
-        MemtoReg <= (opcode == `OPCODE_LW);
+        
+        //RegSrc
+        if (opcode == `OPCODE_LW)
+            RegSrc <= 2'd1;
+        else if (opcode == `OPCODE_JAL 
+            || (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR))
+            RegSrc <= 2'd2;
+        else
+            RegSrc <= 2'd0;
+
         //ALUOp
-        if (opcode == `OPCODE_R) 
+        if (opcode == `OPCODE_R_JR_JALR 
+            && funct != `FUNCT_JR && funct != `FUNCT_JALR) 
         begin
             case (funct)
                 `FUNCT_ADD: ALUOp <= `ALU_ADD;
@@ -53,16 +91,21 @@ module Control(
             ALUOp <= `ALU_SUB;
         else
             ALUOp <= `ALU_NOP;
+        
         //MemWrite
         MemWrite <= (opcode == `OPCODE_SW);
+        
         //ALUSrc
-        ALUSrc <= (opcode == `OPCODE_R || opcode == `OPCODE_BEQ)
-                  ? 0 : 1;
+        ALUSrc <= (opcode == `OPCODE_R_JR_JALR || opcode == `OPCODE_BEQ)
+                  ? 1'b0 : 1'b1;
+        
         //RegWrite
-        RegWrite <= (opcode == `OPCODE_R 
-                  || opcode == `OPCODE_ADDI 
-                  || opcode == `OPCODE_ORI 
-                  || opcode == `OPCODE_LW);
+        RegWrite <= ((opcode == `OPCODE_R_JR_JALR && funct != `FUNCT_JR && funct != `FUNCT_JALR)
+                    || opcode == `OPCODE_ADDI 
+                    || opcode == `OPCODE_ORI 
+                    || opcode == `OPCODE_LW
+                    || opcode == `OPCODE_JAL
+                    || (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR));
     end
   
 endmodule // MIPSControl

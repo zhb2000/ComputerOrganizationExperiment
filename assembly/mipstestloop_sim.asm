@@ -20,7 +20,7 @@ label1: slt  $4, $7, $2         # $4 = (3 < 5) = 1      0A      28      00e2202a
         lw   $2, 80($0)         # $2 = [80] = 7         0E      38      8c020050
         j    label2             # should be taken       0F      3c      08000011
         addi $2, $0, 1          # shouldn't happen      10      40      20020001
-label2: sw   $2, 84($0)         # write adr 84 = 7      11      44      ac020054
+label2: sw   $2, 84($0)         # write [84] = 7        11      44      ac020054
 loop:   j    loop               # dead loop             12      48      08000012
 
 # $0  = 0  # $1  = 0  # $2  = 7  # $3  = c

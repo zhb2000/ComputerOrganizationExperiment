@@ -1,7 +1,8 @@
 // NPC control signal(NPCOp)
-`define NPC_PLUS4   2'b00
-`define NPC_BRANCH  2'b01
-`define NPC_JUMP    2'b10
+`define NPC_PLUS4 2'b00
+`define NPC_BRANCH 2'b01
+`define NPC_JUMP_IMM 2'b10
+`define NPC_JUMP_REG 2'b11
 
 // ALU control signal(ALUOp)
 `define ALU_NOP   3'b000 
@@ -24,8 +25,8 @@
 `define OPCODE_BEQ 6'h4 // beq
 `define OPCODE_J 6'h2 // j
 `define OPCODE_JAL 6'h3 // jal
+`define OPCODE_R_JR_JALR 6'h0 // R-R instruction, jr, jalr
 
-`define OPCODE_R 6'h0 // R-R instruction
 //instruction funct
 `define FUNCT_ADD 6'h20 // add
 `define FUNCT_SUB 6'h22 // sub
@@ -36,3 +37,5 @@
 `define FUNCT_ADDU 6'h21 // addu
 `define FUNCT_SUBU 6'h23 // subu
 `define FUNCT_NOP 6'h0 // nop TODO
+`define FUNCT_JR 6'h9// jr
+`define FUNCT_JALR 6'h8// jalr

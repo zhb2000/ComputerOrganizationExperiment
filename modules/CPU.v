@@ -3,16 +3,16 @@ module CPU(clk, rst);
     input clk;//clock signal
     input rst;//reset signal
 
-    wire RegDst;
-    wire Jump;
+    wire[1:0] RegDst;//select the write reg
+    wire[1:0] Jump;//jump type, use what to write PC
     wire Branch;
-    wire MemtoReg;
-    wire[2:0] ALUOp;
-    wire MemWrite;
-    wire ALUSrc;
-    wire RegWrite;
+    wire[1:0] RegSrc;//select RF's write data
+    wire[2:0] ALUOp;    
+    wire MemWrite;//DataMem's write signal
+    wire ALUSrc;//choose ALU's operand
+    wire RegWrite;//RF's write signal
 
-    wire[31:0] inst;//32-bit instruction
+    wire[31:0] inst;//32bit instruction
     wire[5:0] opcode;
     wire[5:0] funct;
     wire[4:0] rs, rt, rd;
@@ -30,10 +30,10 @@ module CPU(clk, rst);
     wire PCWr;
     assign PCWr = 1;
 
-    wire[31:0] iMemOut;
-    wire IRWr;
-    assign IRWr = 1;//instruction register write signal
-
+    wire[31:0] iMemOut;//instruction memory read data
+    wire IRWr;//instruction register write signal
+    assign IRWr = 1;
+      
     wire[31:0] rfReadData1, rfReadData2;
     wire[31:0] rfWriteData;
     wire[4:0] rfAddr3;//write register address
@@ -67,13 +67,13 @@ module CPU(clk, rst);
                     .RegDst(RegDst), 
                     .Jump(Jump), 
                     .Branch(Branch), 
-                    .MemtoReg(MemtoReg), 
+                    .RegSrc(RegSrc), 
                     .ALUOp(ALUOp), 
                     .MemWrite(MemWrite), 
                     .ALUSrc(ALUSrc), 
                     .RegWrite(RegWrite));
 
-    mux2 #(5) selWriteReg(.d0(rt), .d1(rd),
+    mux4 #(5) selWriteReg(.d0(rt), .d1(rd), .d2(31), .d3(0),
                           .s(RegDst),
                           .y(rfAddr3));
         
@@ -101,8 +101,8 @@ module CPU(clk, rst);
                     .din(rfReadData2), 
                     .dout(dmReadData));
 
-    mux2 #(32) selRFWriteData(.d0(aluResult), .d1(dmReadData),
-                              .s(MemtoReg),
+    mux4 #(32) selRFWriteData(.d0(aluResult), .d1(dmReadData), .d2(PC + 4), .d3(0),
+                              .s(RegSrc),
                               .y(rfWriteData));
     
     PCSrc pcsrc(.Jump(Jump), .Branch(Branch), .Zero(Zero), .NPCOp(NPCOp));
@@ -110,7 +110,8 @@ module CPU(clk, rst);
     NPC npc(.rst(rst),
             .PC(PC), 
             .NPCOp(NPCOp), 
-            .IMM(imm26), 
+            .imm26(imm26), 
+            .addr32(rfReadData1),
             .NPC(NPC));
 
 endmodule // CPU
