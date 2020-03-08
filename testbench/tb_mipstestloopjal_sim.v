@@ -1,6 +1,6 @@
-//for "mipstestloop_sim.asm"
+//for "mipstestloopjal_sim.asm"
 `timescale 1ns/1ns
-module tb_mipstestloop_sim();
+module tb_mipstestloopjal_sim();
     reg clk, rst;
 
     CPU cpu(.clk(clk), .rst(rst));
@@ -9,12 +9,9 @@ module tb_mipstestloop_sim();
 
     initial
     begin
-        //$readmemh("dat_mipstestloop_sim.txt", cpu.insMem.insMem);
-        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/dat/dat_mipstestloop_sim.txt", cpu.insMem.insMem);
-        
-        for(i=0;i<=20;i=i+1)
-            $display("im[%d] = 0x%8h", i, cpu.insMem.insMem[i]);
-        
+        //$readmemh("dat_mipstestloopjal_sim.txt", cpu.insMem.insMem);
+        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/dat/dat_mipstestloopjal_sim.txt", cpu.insMem.insMem);
+
         //$monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
     end
 
@@ -35,10 +32,8 @@ module tb_mipstestloop_sim();
         #5 clk = ~clk;
         if (clk)
         begin
-           $display("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
-            //$display("RegSrc = %d", cpu.RegSrc);
-            //$display("rfWriteData = %d", cpu.rfWriteData);
-            cnt = cnt + 1; 
+            $display("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
+            cnt = cnt + 1;
         end
         
         if(cnt == 30)
@@ -58,4 +53,4 @@ module tb_mipstestloop_sim();
             $display("r[24-31]=0x%8X, 0x%8X, 0x%8X, 0x%8X, 0x%8X, 0x%8X, 0x%8X, 0x%8X", cpu.regFile.rf[24], cpu.regFile.rf[25], cpu.regFile.rf[26], cpu.regFile.rf[27], cpu.regFile.rf[28], cpu.regFile.rf[29], cpu.regFile.rf[30], cpu.regFile.rf[31]);
         end
     endtask
-endmodule // tb_mipstestloop_sim
+endmodule // tb_mipstestloopjal_sim
