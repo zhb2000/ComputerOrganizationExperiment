@@ -47,8 +47,8 @@
 `define FUNCT_ADDU 6'h21 // addu
 `define FUNCT_SUBU 6'h23 // subu
 //`define FUNCT_NOP 6'h0 // nop TODO
-`define FUNCT_JR 6'h9 // jr
-`define FUNCT_JALR 6'h8 // jalr
+`define FUNCT_JR 6'h8 // jr
+`define FUNCT_JALR 6'h9 // jalr
 `define FUNCT_SLL 6'h0 // sll
 `define FUNCT_SRL 6'h2 // srl
 `define FUNCT_SRA 6'h3 // sra
