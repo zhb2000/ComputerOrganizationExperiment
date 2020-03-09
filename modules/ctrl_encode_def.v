@@ -32,6 +32,9 @@
 `define OPCODE_J 6'h2 // j
 `define OPCODE_JAL 6'h3 // jal
 `define OPCODE_R_JR_JALR 6'h0 // R-R instruction, jr, jalr
+`define OPCODE_SLTI 6'hA // slti
+`define OPCODE_ANDI 6'hC // andi
+`define OPCODE_LUI 6'hF // lui
 
 //instruction funct
 `define FUNCT_ADD 6'h20 // add

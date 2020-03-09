@@ -40,41 +40,42 @@ module Control(
         //RegDst
         if (opcode == `OPCODE_R_JR_JALR 
             && funct != `FUNCT_JR && funct != `FUNCT_JALR)
-            RegDst <= 2'd1;
+            RegDst <= 2'd1;//R-R
         else if (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR)
-            RegDst <= 2'd1;
+            RegDst <= 2'd1;//jalr
         else if (opcode == `OPCODE_JAL)
-            RegDst <= 2'd2;
+            RegDst <= 2'd2;//jal
         else
-            RegDst <= 2'd0;
+            RegDst <= 2'd0;//R-I, Load, Store
         
         //Jump
         if (opcode == `OPCODE_J || opcode == `OPCODE_JAL)
-            Jump <= 2'd1;
+            Jump <= 2'd1;//j, jal
         else if(opcode == `OPCODE_R_JR_JALR 
             && (funct == `FUNCT_JR || funct == `FUNCT_JALR))
-            Jump <= 2'd2;
+            Jump <= 2'd2;//jr, jal
         else
             Jump <= 2'd0;
         
         //Branch
         if (opcode == `OPCODE_BEQ)
-            Branch <= 2'd1;
+            Branch <= 2'd1;//beq
         else if (opcode == `OPCODE_BNE)
-            Branch <= 2'd2;
+            Branch <= 2'd2;//bne
         else
             Branch <= 2'd0;
         
         //RegSrc
         if (opcode == `OPCODE_LW)
-            RegSrc <= 2'd1;
+            RegSrc <= 2'd1;//Load
         else if (opcode == `OPCODE_JAL 
             || (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR))
-            RegSrc <= 2'd2;
+            RegSrc <= 2'd2;//jal, jalr
         else
-            RegSrc <= 2'd0;
+            RegSrc <= 2'd0;//R-R, R-I
 
         //ALUOp
+        //R-R
         if (opcode == `OPCODE_R_JR_JALR 
             && funct != `FUNCT_JR && funct != `FUNCT_JALR) 
         begin
@@ -95,40 +96,54 @@ module Control(
                 `FUNCT_SRAV: ALUOp <= `ALU_SRA;
                 `FUNCT_XOR: ALUOp <= `ALU_XOR;
                 `FUNCT_NOR: ALUOp <= `ALU_NOR;
-                //`FUNCT_NOP: ALUOp <= `ALU_NOP;
                 default: ALUOp <= `ALU_NOP;
             endcase
         end
+        //R-I
         else if (opcode == `OPCODE_ADDI)
             ALUOp <= `ALU_ADD;
         else if (opcode == `OPCODE_ORI)
             ALUOp <= `ALU_OR;
+        else if (opcode == `OPCODE_SLTI)
+            ALUOp <= `ALU_SLT;
+        else if (opcode == `OPCODE_ANDI)
+            ALUOp <= `ALU_AND;
+        //Load, Store
         else if (opcode == `OPCODE_LW || opcode == `OPCODE_SW)
             ALUOp <= `ALU_ADD;
+        // Branch
         else if (opcode == `OPCODE_BEQ || opcode == `OPCODE_BNE)
             ALUOp <= `ALU_SUB;
         else
             ALUOp <= `ALU_NOP;
         
         //MemWrite
-        MemWrite <= (opcode == `OPCODE_SW);
+        MemWrite <= (opcode == `OPCODE_SW);//Store
 
         //ALUSrcA
         ALUSrcA <= (opcode == `OPCODE_R_JR_JALR) 
-            && ((funct == `FUNCT_SLL) || (funct == `FUNCT_SRL) || (funct == `FUNCT_SRA));
+            && ((funct == `FUNCT_SLL) 
+             || (funct == `FUNCT_SRL) 
+             || (funct == `FUNCT_SRA));//sll, srl, sra
         
         //ALUSrcB
+        //R-R, beq, bne: 0
+        //R-I, Load, Store: 1
         ALUSrcB <= (opcode == `OPCODE_R_JR_JALR 
                 || opcode == `OPCODE_BEQ 
                 || opcode == `OPCODE_BNE) ? 1'b0 : 1'b1;
         
         //RegWrite
-        RegWrite <= ((opcode == `OPCODE_R_JR_JALR && funct != `FUNCT_JR && funct != `FUNCT_JALR)
+        RegWrite <= ((opcode == `OPCODE_R_JR_JALR && funct != `FUNCT_JR && funct != `FUNCT_JALR)//R-R
+                    //R-I
                     || opcode == `OPCODE_ADDI 
                     || opcode == `OPCODE_ORI 
-                    || opcode == `OPCODE_LW
-                    || opcode == `OPCODE_JAL
-                    || (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR));
+                    || opcode == `OPCODE_SLTI
+                    || opcode == `OPCODE_ANDI
+                    || opcode == `OPCODE_LUI
+                    || opcode == `OPCODE_LW//Load
+                    || opcode == `OPCODE_JAL//jal
+                    || (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR));//jalr
     end
   
 endmodule // MIPSControl
