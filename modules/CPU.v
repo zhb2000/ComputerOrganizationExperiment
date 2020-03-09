@@ -7,15 +7,17 @@ module CPU(clk, rst);
     wire[1:0] Jump;//jump type, use what to write PC
     wire[1:0] Branch;//branch type, equal or not equal
     wire[1:0] RegSrc;//select RF's write data
-    wire[2:0] ALUOp;    
+    wire[3:0] ALUOp;    
     wire MemWrite;//DataMem's write signal
-    wire ALUSrc;//choose ALU's operand
+    wire ALUSrcA;//choose ALU's operand1
+    wire ALUSrcB;//choose ALU's operand2
     wire RegWrite;//RF's write signal
 
     wire[31:0] inst;//32bit instruction
     wire[5:0] opcode;
     wire[5:0] funct;
     wire[4:0] rs, rt, rd;
+    wire[4:0] shamt;
     wire[15:0] imm16;
     wire[25:0] imm26;
     assign opcode = inst[31:26];
@@ -23,6 +25,7 @@ module CPU(clk, rst);
     assign rs = inst[25:21];
     assign rt = inst[20:16];
     assign rd = inst[15:11];
+    assign shamt = inst[10:6];
     assign imm16 = inst[15:0];
     assign imm26 = inst[25:0];
 
@@ -38,10 +41,9 @@ module CPU(clk, rst);
     wire[31:0] rfWriteData;
     wire[4:0] rfAddr3;//write register address
 
-    wire EXTOp;
-    assign EXTOp = `EXT_SIGNED;
+    wire[31:0] shamt32;
     wire[31:0] imm32;
-    wire[31:0] operand2;//ALU's second operand
+    wire[31:0] operand1, operand2;//ALU's operand
     wire[31:0] aluResult;
     wire Zero;
 
@@ -69,8 +71,9 @@ module CPU(clk, rst);
                     .Branch(Branch), 
                     .RegSrc(RegSrc), 
                     .ALUOp(ALUOp), 
-                    .MemWrite(MemWrite), 
-                    .ALUSrc(ALUSrc), 
+                    .MemWrite(MemWrite),
+                    .ALUSrcA(ALUSrcA), 
+                    .ALUSrcB(ALUSrcB), 
                     .RegWrite(RegWrite));
 
     mux4 #(5) selWriteReg(.d0(rt), .d1(rd), .d2(5'd31), .d3(5'bz),
@@ -84,13 +87,17 @@ module CPU(clk, rst);
                .WD(rfWriteData),
                .RD1(rfReadData1), .RD2(rfReadData2));
     
-    EXT extension(.Imm16(imm16), .EXTOp(EXTOp), .Imm32(imm32));
+    EXT extension(.Imm16(imm16), .EXTOp(`EXT_SIGNED), .Imm32(imm32));
+    EXT_5_32 ext_5_32(.shamt(shamt), .EXTOp(`EXT_ZERO), .out32(shamt32));
 
+    mux2 #(32) selOperand1(.d0(rfReadData1), .d1(shamt32),
+                           .s(ALUSrcA),
+                           .y(operand1));
     mux2 #(32) selOperand2(.d0(rfReadData2), .d1(imm32), 
-                           .s(ALUSrc),
-                           .y(operand2));
+                           .s(ALUSrcB),
+                           .y(operand2));                           
     
-    alu mALU(.A(rfReadData1), .B(operand2), 
+    alu mALU(.A(operand1), .B(operand2), 
              .ALUOp(ALUOp),
              .C(aluResult), 
              .Zero(Zero));

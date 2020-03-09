@@ -16,12 +16,15 @@ module Control(
     //0: ALU result, 1: DataMem's dout, 3: pc+4
     output reg[1:0] RegSrc,
     //will be sent to ALU
-    output reg[2:0] ALUOp,
+    output reg[3:0] ALUOp,
     //DataMem's write signal
     output reg MemWrite,
-    //choose ALU's operand
-    //0: RD2 from RF; //1: Imm32 from EXT
-    output reg ALUSrc,
+    //choose ALU's operand1
+    //0: RD1 from RF; 1: 5bit shamt
+    output reg ALUSrcA,
+    //choose ALU's operand2
+    //0: RD2 from RF; 1: Imm32 from EXT
+    output reg ALUSrcB,
     //RF's write signal
     output reg RegWrite
 );
@@ -84,7 +87,16 @@ module Control(
                 `FUNCT_SLTU: ALUOp <= `ALU_SLTU;
                 `FUNCT_ADDU: ALUOp <= `ALU_ADD;
                 `FUNCT_SUBU: ALUOp <= `ALU_SUB;
-                `FUNCT_NOP: ALUOp <= `ALU_NOP;
+                `FUNCT_SLL: ALUOp <= `ALU_SLL;
+                `FUNCT_SRL: ALUOp <= `ALU_SRL;
+                `FUNCT_SRA: ALUOp <= `ALU_SRA;
+                `FUNCT_SLLV: ALUOp <= `ALU_SLL;
+                `FUNCT_SRLV: ALUOp <= `ALU_SRL;
+                `FUNCT_SRAV: ALUOp <= `ALU_SRA;
+                `FUNCT_XOR: ALUOp <= `ALU_XOR;
+                `FUNCT_NOR: ALUOp <= `ALU_NOR;
+                //`FUNCT_NOP: ALUOp <= `ALU_NOP;
+                default: ALUOp <= `ALU_NOP;
             endcase
         end
         else if (opcode == `OPCODE_ADDI)
@@ -100,9 +112,13 @@ module Control(
         
         //MemWrite
         MemWrite <= (opcode == `OPCODE_SW);
+
+        //ALUSrcA
+        ALUSrcA <= (opcode == `OPCODE_R_JR_JALR) 
+            && ((funct == `FUNCT_SLL) || (funct == `FUNCT_SRL) || (funct == `FUNCT_SRA));
         
-        //ALUSrc
-        ALUSrc <= (opcode == `OPCODE_R_JR_JALR 
+        //ALUSrcB
+        ALUSrcB <= (opcode == `OPCODE_R_JR_JALR 
                 || opcode == `OPCODE_BEQ 
                 || opcode == `OPCODE_BNE) ? 1'b0 : 1'b1;
         

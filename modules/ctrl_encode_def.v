@@ -5,13 +5,18 @@
 `define NPC_JUMP_REG 2'b11
 
 // ALU control signal(ALUOp)
-`define ALU_NOP   3'b000 
-`define ALU_ADD   3'b001
-`define ALU_SUB   3'b010 
-`define ALU_AND   3'b011
-`define ALU_OR    3'b100
-`define ALU_SLT   3'b101
-`define ALU_SLTU  3'b110
+`define ALU_NOP 4'd0 
+`define ALU_ADD 4'd1
+`define ALU_SUB 4'd2 
+`define ALU_AND 4'd3
+`define ALU_OR 4'd4
+`define ALU_SLT 4'd5
+`define ALU_SLTU 4'd6
+`define ALU_SLL 4'd7
+`define ALU_SRL 4'd8
+`define ALU_SRA 4'd9
+`define ALU_XOR 4'd10
+`define ALU_NOR 4'd11
 
 // EXTOp
 `define EXT_ZERO 1'b0
@@ -37,6 +42,14 @@
 `define FUNCT_SLTU 6'h2B // sltu
 `define FUNCT_ADDU 6'h21 // addu
 `define FUNCT_SUBU 6'h23 // subu
-`define FUNCT_NOP 6'h0 // nop TODO
-`define FUNCT_JR 6'h9// jr
-`define FUNCT_JALR 6'h8// jalr
+//`define FUNCT_NOP 6'h0 // nop TODO
+`define FUNCT_JR 6'h9 // jr
+`define FUNCT_JALR 6'h8 // jalr
+`define FUNCT_SLL 6'h0 // sll
+`define FUNCT_SRL 6'h2 // srl
+`define FUNCT_SRA 6'h3 // sra
+`define FUNCT_SLLV 6'h4 // sllv
+`define FUNCT_SRLV 6'h6 // srlv
+`define FUNCT_SRAV 6'h7 // srav
+`define FUNCT_XOR 6'h26 // xor
+`define FUNCT_NOR 6'h27 // nor
