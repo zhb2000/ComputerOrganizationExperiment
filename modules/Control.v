@@ -40,20 +40,20 @@ module Control(
         //RegDst
         if (opcode == `OPCODE_R_JR_JALR 
             && funct != `FUNCT_JR && funct != `FUNCT_JALR)
-            RegDst <= 2'd1;//R-R
+            RegDst <= 2'd1;//R-R -- rd
         else if (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR)
-            RegDst <= 2'd1;//jalr
+            RegDst <= 2'd1;//jalr -- rd
         else if (opcode == `OPCODE_JAL)
-            RegDst <= 2'd2;//jal
+            RegDst <= 2'd2;//jal -- $31
         else
-            RegDst <= 2'd0;//R-I, Load, Store
+            RegDst <= 2'd0;//R-I, Load, Store -- rt
         
         //Jump
         if (opcode == `OPCODE_J || opcode == `OPCODE_JAL)
-            Jump <= 2'd1;//j, jal
+            Jump <= 2'd1;//j, jal -- imm26
         else if(opcode == `OPCODE_R_JR_JALR 
             && (funct == `FUNCT_JR || funct == `FUNCT_JALR))
-            Jump <= 2'd2;//jr, jal
+            Jump <= 2'd2;//jr, jal -- reg
         else
             Jump <= 2'd0;
         
@@ -67,12 +67,12 @@ module Control(
         
         //RegSrc
         if (opcode == `OPCODE_LW)
-            RegSrc <= 2'd1;//Load
+            RegSrc <= 2'd1;//Load -- dmem
         else if (opcode == `OPCODE_JAL 
             || (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR))
-            RegSrc <= 2'd2;//jal, jalr
+            RegSrc <= 2'd2;//jal, jalr -- pc+4
         else
-            RegSrc <= 2'd0;//R-R, R-I
+            RegSrc <= 2'd0;//R-R, R-I -- ALU result
 
         //ALUOp
         //R-R
@@ -124,11 +124,11 @@ module Control(
         ALUSrcA <= (opcode == `OPCODE_R_JR_JALR) 
             && ((funct == `FUNCT_SLL) 
              || (funct == `FUNCT_SRL) 
-             || (funct == `FUNCT_SRA));//sll, srl, sra
+             || (funct == `FUNCT_SRA));//sll, srl, sra -- shamt; other -- RF's RD1
         
         //ALUSrcB
-        //R-R, beq, bne: 0
-        //R-I, Load, Store: 1
+        //R-R, beq, bne: 0 -- RF's RD2
+        //R-I, Load, Store: 1 -- imm32
         ALUSrcB <= (opcode == `OPCODE_R_JR_JALR 
                 || opcode == `OPCODE_BEQ 
                 || opcode == `OPCODE_BNE) ? 1'b0 : 1'b1;

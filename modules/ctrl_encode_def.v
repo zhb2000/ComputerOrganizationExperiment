@@ -17,6 +17,7 @@
 `define ALU_SRA 4'd9
 `define ALU_XOR 4'd10
 `define ALU_NOR 4'd11
+`define ALU_LUI 4'd12
 
 // EXTOp
 `define EXT_ZERO 1'b0

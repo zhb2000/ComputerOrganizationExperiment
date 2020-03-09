@@ -4,11 +4,10 @@ module alu(A, B, ALUOp, C, Zero);
            
    input signed [31:0] A, B;//operand A, B
    input [3:0]  ALUOp;//ALU control signal
-   output signed [31:0] C;//result C
+   output reg signed [31:0] C;//result C
    output Zero;//whether C is equal to 0
    
-   reg [31:0] C;
-   wire[4:0] shamt;
+   //reg [31:0] C;
        
    always @(*) begin
       case (ALUOp)
@@ -24,6 +23,7 @@ module alu(A, B, ALUOp, C, Zero);
           `ALU_SRA: C = B >>> A[4:0];// SRA/SRAV
           `ALU_XOR: C = A ^ B;// XOR
           `ALU_NOR: C = ~(A | B);// NOR
+          `ALU_LUI: C = {B[15:0], 16'b0};
           default: C = A;// Undefined
       endcase
    end // end always
