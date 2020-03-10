@@ -11,15 +11,12 @@ module NPC(rst, PC, NPCOp, imm26, addr32, NPC);  // next pc module
    wire [31:0] PCPLUS4;//the value of PC + 4
    
    assign PCPLUS4 = PC + 4; //pc + 4
-   
-   always @(posedge rst)
-   begin
-      NPC = 32'h0000_0000;
-   end
-
+  
    always @(*) 
    begin
-      if (!rst)
+      if(rst)
+         NPC = `TEXT_BASE_ADDRESS;
+      else
          case (NPCOp)
             `NPC_PLUS4: NPC = PCPLUS4;
             `NPC_BRANCH: NPC = PCPLUS4 + {{14{imm26[15]}}, imm26[15:0], 2'b00};

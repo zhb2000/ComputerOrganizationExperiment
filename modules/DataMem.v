@@ -1,3 +1,4 @@
+`include "ctrl_encode_def.v"
 //Data Memory
 module DataMem(clk, DMWr, address, din, dout);
     input clk;//clock signal
@@ -8,13 +9,20 @@ module DataMem(clk, DMWr, address, din, dout);
 
     reg [31:0] dataMem [1023:0];//data memory(with 1023 32bit cells)
 
+    wire[31:0] baseOffset;//offset from data base address
+    assign baseOffset = address - `DATA_BASE_ADDRESS;
+    
+    wire[9:0] index;//index of the cell
+    assign index = baseOffset[11:2];//only use 10bit address
+
+    //TODO
     always @(posedge clk) 
         if (DMWr)
         begin
-            dataMem[address[11:2]] <= din;//only use 10bit address
-            $display("m[%d / 4 = %d] = %d,", address, address[11:2], din);
+            dataMem[index] <= din;//only use 10bit address
+            $display("m[%d / 4 = %d] = %d,", baseOffset, index, din);
         end
             
 
-    assign dout = dataMem[address[11:2]];//only use 10bit address
+    assign dout = dataMem[index];//only use 10bit address
 endmodule // DataMem

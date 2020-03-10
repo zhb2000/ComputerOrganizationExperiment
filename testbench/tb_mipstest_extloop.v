@@ -33,7 +33,8 @@ module tb_mipstest_extloop();
         if (clk)
         begin
             $display("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
-            $display("rd = %d, rfWriteData = %d, RegWrite = %b", cpu.rd, cpu.rfWriteData, cpu.RegWrite);
+            //$display("A = 0x%8h, B = 0x%8h", cpu.operand1, cpu.operand2);
+            //$display("rfWriteData = %d, RegSrc = %d", cpu.rfWriteData, cpu.RegSrc);
             cnt = cnt + 1;
         end
         

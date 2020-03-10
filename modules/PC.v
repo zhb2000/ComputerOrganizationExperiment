@@ -1,3 +1,4 @@
+`include "ctrl_encode_def.v"
 //PC registesr
 module PC(clk, rst, PCWr, NPC, PC);
 
@@ -7,9 +8,9 @@ module PC(clk, rst, PCWr, NPC, PC);
   input[31:0] NPC;//input next pc
   output reg[31:0] PC;//output pc
 
-  always @(posedge clk, posedge rst)
+  always @(posedge clk or posedge rst)
     if (rst) 
-      PC <= 32'h0000_0000; //PC <= 32'h0000_3000;
+      PC <= `TEXT_BASE_ADDRESS;
     else if (PCWr)
       PC <= NPC;
 endmodule
