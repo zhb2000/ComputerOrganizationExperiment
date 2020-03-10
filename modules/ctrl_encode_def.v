@@ -27,11 +27,22 @@
 `define EXT_ZERO 1'b0
 `define EXT_SIGNED 1'b1
 
+//MemOp
+`define MEM_BYTE 2'd0
+`define MEM_HALF 2'd1
+`define MEM_WORD 2'd2
+
 // instruction opcode
 `define OPCODE_ADDI 6'h8 // addi
 `define OPCODE_ORI 6'hD // ori
 `define OPCODE_LW 6'h23 // lw
+`define OPCODE_LB 6'h20 // lb
+`define OPCODE_LH 6'h21 // lh
+`define OPCODE_LBU 6'h24 // lbu
+`define OPCODE_LHU 6'h25 // lhu
 `define OPCODE_SW 6'h2B // sw
+`define OPCODE_SB 6'h28 //sb
+`define OPCODE_SH 6'h29 //sh
 `define OPCODE_BEQ 6'h4 // beq
 `define OPCODE_BNE 6'h5 // bne
 `define OPCODE_J 6'h2 // j
@@ -50,7 +61,6 @@
 `define FUNCT_SLTU 6'h2B // sltu
 `define FUNCT_ADDU 6'h21 // addu
 `define FUNCT_SUBU 6'h23 // subu
-//`define FUNCT_NOP 6'h0 // nop TODO
 `define FUNCT_JR 6'h8 // jr
 `define FUNCT_JALR 6'h9 // jalr
 `define FUNCT_SLL 6'h0 // sll

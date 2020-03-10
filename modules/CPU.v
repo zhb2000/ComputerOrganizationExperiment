@@ -7,7 +7,9 @@ module CPU(clk, rst);
     wire[1:0] Jump;//jump type, use what to write PC
     wire[1:0] Branch;//branch type, equal or not equal
     wire[1:0] RegSrc;//select RF's write data
-    wire[3:0] ALUOp;    
+    wire[3:0] ALUOp;  
+    wire[1:0] MemOp;//operate byte, half word or word in DataMem
+    wire MemEXT;//EXTOp in DataMem
     wire MemWrite;//DataMem's write signal
     wire ALUSrcA;//choose ALU's operand1
     wire ALUSrcB;//choose ALU's operand2
@@ -71,6 +73,8 @@ module CPU(clk, rst);
                     .Branch(Branch), 
                     .RegSrc(RegSrc), 
                     .ALUOp(ALUOp), 
+                    .MemOp(MemOp),
+                    .MemEXT(MemEXT),
                     .MemWrite(MemWrite),
                     .ALUSrcA(ALUSrcA), 
                     .ALUSrcB(ALUSrcB), 
@@ -104,6 +108,8 @@ module CPU(clk, rst);
 
     DataMem dataMem(.clk(clk), 
                     .DMWr(MemWrite), 
+                    .MemOp(MemOp),
+                    .MemEXT(MemEXT),
                     .address(aluResult), 
                     .din(rfReadData2), 
                     .dout(dmReadData));

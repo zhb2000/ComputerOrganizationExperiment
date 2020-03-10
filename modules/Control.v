@@ -17,6 +17,11 @@ module Control(
     output reg[1:0] RegSrc,
     //will be sent to ALU
     output reg[3:0] ALUOp,
+    //operate byte, half word or word in DataMem
+    output reg[1:0] MemOp,
+    //EXTOp in DataMem
+    //0: zero-extension, 1: signed-extension
+    output reg MemEXT,
     //DataMem's write signal
     output reg MemWrite,
     //choose ALU's operand1
@@ -55,7 +60,7 @@ module Control(
             && (funct == `FUNCT_JR || funct == `FUNCT_JALR))
             Jump <= 2'd2;//jr, jal -- reg
         else
-            Jump <= 2'd0;
+            Jump <= 2'd0;//not jump
         
         //Branch
         if (opcode == `OPCODE_BEQ)
@@ -63,12 +68,15 @@ module Control(
         else if (opcode == `OPCODE_BNE)
             Branch <= 2'd2;//bne
         else
-            Branch <= 2'd0;
+            Branch <= 2'd0;//not branch
         
         //RegSrc
-        if (opcode == `OPCODE_LW)
+        if (opcode == `OPCODE_LW || opcode == `OPCODE_LB 
+         || opcode == `OPCODE_LH || opcode == `OPCODE_LBU 
+         || opcode == `OPCODE_LHU)
             RegSrc <= 2'd1;//Load -- dmem
-        else if (opcode == `OPCODE_JAL || (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR))
+        else if (opcode == `OPCODE_JAL 
+             || (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR))
             RegSrc <= 2'd2;//jal, jalr -- pc+4
         else
             RegSrc <= 2'd0;//R-R, R-I -- ALU result
@@ -110,7 +118,11 @@ module Control(
         else if (opcode == `OPCODE_LUI)
             ALUOp <= `ALU_LUI;
         //Load, Store
-        else if (opcode == `OPCODE_LW || opcode == `OPCODE_SW)
+        else if (opcode == `OPCODE_LW || opcode == `OPCODE_LB 
+              || opcode == `OPCODE_LH || opcode == `OPCODE_LBU 
+              || opcode == `OPCODE_LHU
+              || opcode == `OPCODE_SW || opcode == `OPCODE_SB 
+              || opcode == `OPCODE_SH)
             ALUOp <= `ALU_ADD;
         // Branch
         else if (opcode == `OPCODE_BEQ || opcode == `OPCODE_BNE)
@@ -118,8 +130,28 @@ module Control(
         else
             ALUOp <= `ALU_NOP;
         
+        //MemOp
+        if (opcode == `OPCODE_LB 
+         || opcode == `OPCODE_LBU 
+         || opcode == `OPCODE_SB)
+            MemOp <= `MEM_BYTE;//lb, lbu, sb -- byte
+        else if (opcode == `OPCODE_LH 
+              || opcode == `OPCODE_LHU 
+              || opcode == `OPCODE_SH)
+            MemOp <= `MEM_HALF;//lh, lhu, sh -- half
+        else
+            MemOp <= `MEM_WORD;//lw, sw -- word
+        
+        //MemEXT
+        if (opcode == `OPCODE_LBU || opcode == `OPCODE_LHU)
+            MemEXT <= `EXT_ZERO;//lbu, lhu -- zero-ext
+        else
+            MemEXT <= `EXT_SIGNED;//lb, lh -- signed-ext
+
         //MemWrite
-        MemWrite <= (opcode == `OPCODE_SW);//Store
+        MemWrite <= (opcode == `OPCODE_SW 
+                  || opcode == `OPCODE_SB 
+                  || opcode == `OPCODE_SH);//Store -- MemWrite = 1
 
         //ALUSrcA
         ALUSrcA <= (opcode == `OPCODE_R_JR_JALR) 
@@ -131,18 +163,20 @@ module Control(
         //R-R, beq, bne: 0 -- RF's RD2
         //R-I, Load, Store: 1 -- imm32
         ALUSrcB <= (opcode == `OPCODE_R_JR_JALR 
-                || opcode == `OPCODE_BEQ 
-                || opcode == `OPCODE_BNE) ? 1'b0 : 1'b1;
+                 || opcode == `OPCODE_BEQ 
+                 || opcode == `OPCODE_BNE) ? 1'b0 : 1'b1;
         
         //RegWrite
-        RegWrite <= ((opcode == `OPCODE_R_JR_JALR && funct != `FUNCT_JR && funct != `FUNCT_JALR)//R-R
+        RegWrite <= ((opcode == `OPCODE_R_JR_JALR && funct != `FUNCT_JR 
+                    && funct != `FUNCT_JALR)//R-R
                     //R-I
-                    || opcode == `OPCODE_ADDI 
+                    || opcode == `OPCODE_ADDI
                     || opcode == `OPCODE_ORI 
                     || opcode == `OPCODE_SLTI
                     || opcode == `OPCODE_ANDI
                     || opcode == `OPCODE_LUI
-                    || opcode == `OPCODE_LW//Load
+                    || opcode == `OPCODE_LW || opcode == `OPCODE_LB || opcode == `OPCODE_LH //load
+                    || opcode == `OPCODE_LBU || opcode == `OPCODE_LHU //Load
                     || opcode == `OPCODE_JAL//jal
                     || (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR));//jalr
     end

@@ -1,13 +1,15 @@
-单周期CPU，支持15条指令
-| 信号名称 | 作用                |
-| -------- | ------------------- |
-| opcode   | 操作码              |
-| funct    | 功能码(R型指令中用) |
-| ALUOp    | ALU操作             |
+# 单周期CPU
+| 信号名称     | 作用                     |
+| ------------ | ------------------------ |
+| opcode(6bit) | 操作码                   |
+| funct(6bit)  | 功能码                   |
+| ALUOp(4bit)  | ALU操作                  |
+| MemOp(2bit)  | 数据存储器，字节/半字/字 |
 
 | 信号名称 | 作用           | 0                 | 1          |
 | -------- | -------------- | ----------------- | ---------- |
 | MemWrite | 是否写DataMem  | 否                | 是         |
+| MemEXT   | 零/符号扩展    | 零扩展            | 符号扩展   |
 | ALUSrcA  | 选择操作数A    | 寄存器堆ReadData1 | 5位移位量  |
 | ALUSrcB  | 选择操作数B    | 寄存器堆ReadData2 | 32位立即数 |
 | RegWrite | 是否写寄存器堆 | 否                | 是         |
@@ -19,10 +21,9 @@
 | Jump     | 跳转指令的种类       | 否      | 用立即数写PC | 用寄存器写PC |
 | Branch   | 是否是分支指令       | 否      | beq          | bne          |
 
-
-PCSrc----选择下一条指令的地址，由Jump、Branch、Zero共同确定
-
-除了sll、srl、sra以外，其余情况ALUSrcA均为0
+- ALUSrcA ---- 除了sll、srl、sra以外，其余情况ALUSrcA均为0
+- MemEXT ---- 在lbu、lhu中为zero，在lb、lh中为signed，其余情况无所谓
+- NPCOp ---- 选择下一条指令的地址，由Jump、Branch、Zero共同确定
 
 # R-R运算
 | 指令 | opcode/funct | RegDst | Jump | Branch | RegSrc | ALUOp | MemWrite | ALUSrcA/B | RegWrite |
@@ -51,23 +52,23 @@ PCSrc----选择下一条指令的地址，由Jump、Branch、Zero共同确定
 | ori  | DH     |        |      |        |        | or    |          |         |          |
 | slti | AH     |        |      |        |        | slt   |          |         |          |
 | andi | CH     |        |      |        |        | and   |          |         |          |
-| lui  | FH     |        |      |        |        |       |          |         |          |
+| lui  | FH     |        |      |        |        | lui   |          |         |          |
 
 # 加载
-| 指令 | opcode | RegDst | Jump | Branch | RegSrc | ALUOp | MemWrite | ALUSrcB | RegWrite |
-| ---- | ------ | ------ | ---- | ------ | ------ | ----- | -------- | ------- | -------- |
-| lw   | 23H    | 0      | 0    | 0      | 1      | add   | 0        | 1       | 1        |
-| lb   | 20H    |
-| lh   | 21H    |
-| lbu  | 24H    |
-| lhu  | 25H    |
+| 指令 | opcode | RegDst | Jump | Branch | RegSrc | ALUOp | MemWrite | MemOp | MemEXT | ALUSrcB | RegWrite |
+| ---- | ------ | ------ | ---- | ------ | ------ | ----- | -------- | ----- | ------ | ------- | -------- |
+| lw   | 23H    | 0      | 0    | 0      | 1      | add   | 0        | word  | x      | 1       | 1        |
+| lb   | 20H    |        |      |        |        |       |          | byte  | signed |         |          |
+| lh   | 21H    |        |      |        |        |       |          | half  | signed |         |          |
+| lbu  | 24H    |        |      |        |        |       |          | byte  | zero   |         |          |
+| lhu  | 25H    |        |      |        |        |       |          | half  | zero   |         |          |
 
 # 保存
-| 指令 | opcode | RegDst | Jump | Branch | RegSrc | ALUOp | MemWrite | ALUSrcB | RegWrite |
-| ---- | ------ | ------ | ---- | ------ | ------ | ----- | -------- | ------- | -------- |
-| sw   | 2BH    | x      | 0    | 0      | x      | add   | 1        | 1       | 0        |
-| sb   | 28H    |
-| sh   | 29H    |
+| 指令 | opcode | RegDst | Jump | Branch | RegSrc | ALUOp | MemWrite | MemOp | MemEXT | ALUSrcB | RegWrite |
+| ---- | ------ | ------ | ---- | ------ | ------ | ----- | -------- | ----- | ------ | ------- | -------- |
+| sw   | 2BH    | x      | 0    | 0      | x      | add   | 1        | word  | x      | 1       | 0        |
+| sb   | 28H    |        |      |        |        |       |          | byte  |        |         |          |
+| sh   | 29H    |        |      |        |        |       |          | half  |        |         |          |
 
 # 分支
 | 指令 | opcode | RegDst | Jump | Branch | RegSrc | ALUOp | MemWrite | ALUSrcB | RegWrite |

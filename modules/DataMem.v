@@ -1,28 +1,94 @@
 `include "ctrl_encode_def.v"
 //Data Memory
-module DataMem(clk, DMWr, address, din, dout);
+module DataMem(clk, DMWr, MemOp, MemEXT, address, din, dout);
     input clk;//clock signal
-    input DMWr;//write signal; 1: write, 0: read
+    input DMWr;//write signal; 1: write, 0: read only
+    input[1:0] MemOp;//byte, half or word
+    input MemEXT;//0: zero-extenstion, 1: signed-extension
     input[31:0] address;//read/write address, //only use 10bit address
     input[31:0] din;//write data input
-    output[31:0] dout;//read data output
+    output reg[31:0] dout;//read data output
+
 
     reg [31:0] dataMem [1023:0];//data memory(with 1023 32bit cells)
 
-    wire[31:0] baseOffset;//offset from data base address
+    wire[31:0] baseOffset;//offset from data base address(byte address)
     assign baseOffset = address - `DATA_BASE_ADDRESS;
     
-    wire[9:0] index;//index of the cell
+    wire[9:0] index;//index of the cell(word address)
     assign index = baseOffset[11:2];//only use 10bit address
 
-    //TODO
+    wire[31:0] indexData;//the word in dataMem[index]
+    assign indexData = dataMem[index];
+    
+    reg[7:0] byteRead;
+    reg[15:0] halfRead;
+    wire[31:0] out32;
+    EXT_8_32 byteExt(.in8(byteRead), .EXTOp(MemEXT), .out32(out32));
+    EXT_16_32 halfExt(.in16(halfRead), .EXTOp(MemEXT), .out32(out32));
+
+    //write data
     always @(posedge clk) 
+    begin
         if (DMWr)
         begin
-            dataMem[index] <= din;//only use 10bit address
-            $display("m[%d / 4 = %d] = %d,", baseOffset, index, din);
+            case (MemOp)
+                `MEM_BYTE:
+                begin
+                    case (baseOffset[1:0])
+                        2'd0: dataMem[index] = {indexData[31:8], din[7:0]}; 
+                        2'd1: dataMem[index] = {indexData[31:16], din[7:0], indexData[7:0]};
+                        2'd2: dataMem[index] = {indexData[31:24], din[7:0], indexData[15:0]};
+                        2'd3: dataMem[index] = {din[7:0], indexData[23:0]};
+                    endcase
+                    $display("write byte, m[%d/4=%d], inner byte: %d, WD = 0x%2h", 
+                                    baseOffset, index, baseOffset[1:0], din[7:0]);
+                end
+                `MEM_HALF:
+                begin
+                    case (baseOffset[1:0])
+                        2'd0: dataMem[index] = {indexData[31:16], din[15:0]};
+                        2'd2: dataMem[index] = {din[15:0], indexData[15:0]};
+                        default: $display("Wrong boundary in half write!");
+                    endcase  
+                    $display("write half, m[%d/4=%d], inner byte: %d, WD = 0x%4h", 
+                                    baseOffset, index, baseOffset[1:0], din[15:0]);
+                end
+                `MEM_WORD: 
+                begin
+                    dataMem[index] = din;
+                    $display("write word, m[%d / 4 = %d] = %d,", baseOffset, index, din);
+                end
+            endcase
         end
-            
+    end
 
-    assign dout = dataMem[index];//only use 10bit address
+    //read data
+    always @(*) 
+    begin
+        case (MemOp)
+            `MEM_BYTE:
+            begin
+                case (baseOffset[1:0])
+                    2'd0: byteRead = indexData[7:0];
+                    2'd1: byteRead = indexData[15:8];
+                    2'd2: byteRead = indexData[23:16];
+                    2'd3: byteRead = indexData[31:24];
+                endcase
+                dout = out32;
+            end
+                
+            `MEM_HALF:
+            begin
+                case (baseOffset[1:0])
+                    2'd0: halfRead = indexData[15:0];
+                    2'd1: halfRead = indexData[31:16];
+                    default: $display("Wrong boundary in half read!");
+                endcase
+                dout = out32;
+            end
+            `MEM_WORD: dout = indexData;
+        endcase
+    end
+    
 endmodule // DataMem
