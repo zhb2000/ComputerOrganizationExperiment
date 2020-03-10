@@ -108,7 +108,7 @@ module CPU(clk, rst);
                     .din(rfReadData2), 
                     .dout(dmReadData));
 
-    mux4 #(32) selRFWriteData(.d0(aluResult), .d1(dmReadData), .d2(PC + 4), .d3(32'bz),
+    mux4 #(32) selRFWriteData(.d0(aluResult), .d1(dmReadData), .d2(PC + 32'd4), .d3(32'bz),
                               .s(RegSrc),
                               .y(rfWriteData));
     

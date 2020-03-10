@@ -68,8 +68,7 @@ module Control(
         //RegSrc
         if (opcode == `OPCODE_LW)
             RegSrc <= 2'd1;//Load -- dmem
-        else if (opcode == `OPCODE_JAL 
-            || (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR))
+        else if (opcode == `OPCODE_JAL || (opcode == `OPCODE_R_JR_JALR && funct == `FUNCT_JALR))
             RegSrc <= 2'd2;//jal, jalr -- pc+4
         else
             RegSrc <= 2'd0;//R-R, R-I -- ALU result
@@ -108,6 +107,8 @@ module Control(
             ALUOp <= `ALU_SLT;
         else if (opcode == `OPCODE_ANDI)
             ALUOp <= `ALU_AND;
+        else if (opcode == `OPCODE_LUI)
+            ALUOp <= `ALU_LUI;
         //Load, Store
         else if (opcode == `OPCODE_LW || opcode == `OPCODE_SW)
             ALUOp <= `ALU_ADD;

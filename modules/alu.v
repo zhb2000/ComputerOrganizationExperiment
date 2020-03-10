@@ -23,7 +23,7 @@ module alu(A, B, ALUOp, C, Zero);
           `ALU_SRA: C = B >>> A[4:0];// SRA/SRAV
           `ALU_XOR: C = A ^ B;// XOR
           `ALU_NOR: C = ~(A | B);// NOR
-          `ALU_LUI: C = {B[15:0], 16'b0};
+          `ALU_LUI: C = {B[15:0], 16'b0};// LUI
           default: C = A;// Undefined
       endcase
    end // end always
