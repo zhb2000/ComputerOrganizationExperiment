@@ -44,7 +44,8 @@ sw    $10, 0x18($29)    # [0x18]=0xffffff98                           # afaa0018
 lbu   $10, 0x03($29)    # $10=0x00000098 [0]=0x98761234               # 93aa0003  little endian, zero extension
 sw    $10, 0x1c($29)    # [0x1c]=0x00000098                           # afaa001c   
 lbu   $10, 0x01($29)    # $10=0x00000012 [0]=0x98761234               # 93aa0001  little endian, zero extension
-sw    $10, 0x20($29)    # [0x20]=0x00000012                           # afaa0020  
+sw    $10, 0x20($29)    # [0x20]=0x00000012                           # afaa0020
+loop: j loop            # dead loop                                   # 08000c29
 
 
 # $0=0              $1=0              $2=0x00001234     $3=0x98760000
