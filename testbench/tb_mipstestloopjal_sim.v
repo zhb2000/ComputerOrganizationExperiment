@@ -1,4 +1,10 @@
 //for "mipstestloopjal_sim.asm"
+
+//TEXT_BASE_ADDRESS 32'h0000_3000
+//DATA_BASE_ADDRESS 32'h0000_0000
+
+//add, sub, and, or, slt, addi, lw, sw, beq, j, jal
+
 `timescale 1ns/1ns
 module tb_mipstestloopjal_sim();
     reg clk, rst;

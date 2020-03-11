@@ -10,7 +10,7 @@ module PC(clk, rst, PCWr, NPC, PC);
 
   always @(posedge clk or posedge rst)
     if (rst) 
-      PC <= `TEXT_BASE_ADDRESS;
+      PC = `TEXT_BASE_ADDRESS;
     else if (PCWr)
-      PC <= NPC;
+      PC = NPC;
 endmodule

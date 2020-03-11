@@ -1,4 +1,10 @@
 //for "mipstest_extloop.asm"
+
+//TEXT_BASE_ADDRESS 32'h0000_3000
+//DATA_BASE_ADDRESS 32'h0000_0000
+
+//add sub and or slt addi lw sw beq j
+
 `timescale 1ns/1ns
 module tb_mipstest_extloop();
     reg clk, rst;

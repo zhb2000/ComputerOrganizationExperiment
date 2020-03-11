@@ -1,5 +1,13 @@
 //for "extendedtest.asm"
-//Data at address 0
+
+//TEXT_BASE_ADDRESS 32'h0000_3000
+//DATA_BASE_ADDRESS 32'h0000_0000
+
+//lui ori subu addu add sub nor or and slt stlu addi
+//sll srl sra sllv srlv srav
+//sw sh sb
+//lw lh lhu lb lbu
+
 `timescale 1ns/1ns
 module tb_extendedtest();
     reg clk, rst;

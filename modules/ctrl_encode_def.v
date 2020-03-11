@@ -1,5 +1,5 @@
 // Base address settings
-`define TEXT_BASE_ADDRESS 32'h0000_0000 //text base address 32'h0000_0000 32'h0000_3000
+`define TEXT_BASE_ADDRESS 32'h0000_3000 //text base address 32'h0000_0000 32'h0000_3000
 `define DATA_BASE_ADDRESS 32'h0000_0000 //data base address 32'h0000_2000 32'h0000_0000
 
 // NPC control signal(NPCOp)

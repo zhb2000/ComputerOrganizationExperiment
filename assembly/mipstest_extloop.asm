@@ -24,10 +24,10 @@ around: slt  $4, $7, $2     # $4 = 3 < 5 = 1       30      00e2202a
         sub  $7, $7, $2     # $7 = 12 - 5 = 7      38      00e23822
         sw   $7, 68($3)     # [80] = 7             3c      ac670044
         lw   $2, 80($0)     # $2 = [80] = 7        40      8c020050
-        j    end            # should be taken      44      08000020
+        j    end            # should be taken      44      08000c20
         addi $2, $0, 1      # shouldn't happen     48      20020001
 cal:    sll  $7, $7, 1      # $7 << 1 = 6          4c      00073840
-call_b: jal  cal2           # jump to cal2         50      0c000017
+call_b: jal  cal2           # jump to cal2         50      0c000c17
         addi $31,$0,20      # $31<= 20             54      201f0014
         jr   $31            # return to call_a     58      03e00008
 cal2:   lui  $1, 0x55AA     # $1 <= 0x55AA0000     5c      3c0155aa
@@ -40,7 +40,7 @@ cal2:   lui  $1, 0x55AA     # $1 <= 0x55AA0000     5c      3c0155aa
         srl  $7, $7, 1      # $7 >> 1 = 3          78      00073842
         jr   $31            # return to call_b     7c      03e00008
 end:    sw   $2, 84($0)     # write adr 84 = 7     80      ac020054
-loop:   j    loop
+loop:   j    loop           # dead loop            84      08000c21
 
 # $0  = 0  # $1  = 0  # $2  = 7  # $3  = c
 # $4  = 1  # $5  = b  # $7  = 7  # $31  = 14h
