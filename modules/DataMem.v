@@ -23,9 +23,9 @@ module DataMem(clk, DMWr, MemOp, MemEXT, address, din, dout);
     
     reg[7:0] byteRead;
     reg[15:0] halfRead;
-    wire[31:0] out32;
-    EXT_8_32 byteExt(.in8(byteRead), .EXTOp(MemEXT), .out32(out32));
-    EXT_16_32 halfExt(.in16(halfRead), .EXTOp(MemEXT), .out32(out32));
+    wire[31:0] out_8_32, out_16_32;
+    EXT_8_32 byteExt(.in8(byteRead), .EXTOp(MemEXT), .out32(out_8_32));
+    EXT_16_32 halfExt(.in16(halfRead), .EXTOp(MemEXT), .out32(out_16_32));
 
     //write data
     always @(posedge clk) 
@@ -41,23 +41,23 @@ module DataMem(clk, DMWr, MemOp, MemEXT, address, din, dout);
                         2'd2: dataMem[index] = {indexData[31:24], din[7:0], indexData[15:0]};
                         2'd3: dataMem[index] = {din[7:0], indexData[23:0]};
                     endcase
-                    $display("write byte, m[%d/4=%d], inner byte: %d, WD = 0x%2h", 
-                                    baseOffset, index, baseOffset[1:0], din[7:0]);
+                    $display("store byte, m[%d/4=%d] = 0x%8h", baseOffset, index, dataMem[index]);
+                    $display("inner-address: %d, WD = 0x%2h", baseOffset[1:0], din[7:0]);
                 end
                 `MEM_HALF:
                 begin
                     case (baseOffset[1:0])
                         2'd0: dataMem[index] = {indexData[31:16], din[15:0]};
                         2'd2: dataMem[index] = {din[15:0], indexData[15:0]};
-                        default: $display("Wrong boundary in half write!");
+                        default: $display("store half, wrong boundary!");
                     endcase  
-                    $display("write half, m[%d/4=%d], inner byte: %d, WD = 0x%4h", 
-                                    baseOffset, index, baseOffset[1:0], din[15:0]);
+                    $display("store half, m[%d/4=%d] = 0x%8h", baseOffset, index, dataMem[index]);
+                    $display("inner-address: %d, WD = 0x%4h", baseOffset[1:0], din[15:0]);
                 end
                 `MEM_WORD: 
                 begin
                     dataMem[index] = din;
-                    $display("write word, m[%d / 4 = %d] = %d,", baseOffset, index, din);
+                    $display("store word, m[%d/4=%d] = %d(0x%8h),", baseOffset, index, din, din);
                 end
             endcase
         end
@@ -75,17 +75,16 @@ module DataMem(clk, DMWr, MemOp, MemEXT, address, din, dout);
                     2'd2: byteRead = indexData[23:16];
                     2'd3: byteRead = indexData[31:24];
                 endcase
-                dout = out32;
-            end
-                
+                dout = out_8_32;
+            end 
             `MEM_HALF:
             begin
                 case (baseOffset[1:0])
                     2'd0: halfRead = indexData[15:0];
-                    2'd1: halfRead = indexData[31:16];
-                    default: $display("Wrong boundary in half read!");
+                    2'd2: halfRead = indexData[31:16];
+                    default: if (!DMWr) $display("read half, wrong boundary!");
                 endcase
-                dout = out32;
+                dout = out_16_32;
             end
             `MEM_WORD: dout = indexData;
         endcase

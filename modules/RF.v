@@ -18,7 +18,8 @@ module RF(input         clk,//clock signal
     else if (RFWr && A3 != 0)
     begin
       rf[A3] <= WD;
-      $display("r[%d] = %d,", A3, WD);
+      $display("r[%d] = %d(0x%8h)", A3, WD, WD);
+
     end
   end
 
