@@ -1,7 +1,6 @@
 `include "ctrl_encode_def.v"
 //decide next PC
-module NPC(rst, PC, NPCOp, imm26, addr32, NPC);  // next pc module
-   input rst;
+module NPC(PC, NPCOp, imm26, addr32, NPC);  // next pc module
    input[31:0] PC;//pc
    input[1:0]  NPCOp;//next pc operation
    input[25:0] imm26;//26bit imm26ediate
@@ -14,15 +13,12 @@ module NPC(rst, PC, NPCOp, imm26, addr32, NPC);  // next pc module
   
    always @(*) 
    begin
-      if(rst)
-         NPC = `TEXT_BASE_ADDRESS;
-      else
-         case (NPCOp)
-            `NPC_PLUS4: NPC = PCPLUS4;
-            `NPC_BRANCH: NPC = PCPLUS4 + {{14{imm26[15]}}, imm26[15:0], 2'b00};
-            `NPC_JUMP_IMM: NPC = {PCPLUS4[31:28], imm26[25:0], 2'b00};
-            `NPC_JUMP_REG: NPC = addr32;
-         endcase
+      case (NPCOp)
+         `NPC_PLUS4: NPC = PCPLUS4;
+         `NPC_BRANCH: NPC = PCPLUS4 + {{14{imm26[15]}}, imm26[15:0], 2'b00};
+         `NPC_JUMP_IMM: NPC = {PCPLUS4[31:28], imm26[25:0], 2'b00};
+         `NPC_JUMP_REG: NPC = addr32;
+      endcase
    end // end always
    
 endmodule

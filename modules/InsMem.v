@@ -1,8 +1,9 @@
 `include "ctrl_encode_def.v"
 //Instrction Memory
-module InsMem(address, dout);
+module InsMem(rst, address, dout);
+    input rst;
     input[31:0] address;//only use 10bit address
-    output[31:0] dout;//instruction output
+    output reg[31:0] dout;//instruction output
 
     reg[31:0] insMem [1023:0];//instruction memory(with 1024 32bit cells)
     
@@ -12,6 +13,13 @@ module InsMem(address, dout);
     wire[9:0] index;//index of the cell
     assign index = baseOffset[11:2];//only use 10bit address
 
-    assign dout = insMem[index];
+    always @(posedge rst, negedge rst)
+        dout = 0;//remain 0 when posedge or negedge
+
+    always @(*)
+        if (rst)
+            dout = 0;
+        else
+            dout = insMem[index];
     
 endmodule // InsMem

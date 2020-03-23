@@ -1,6 +1,6 @@
 //Instruction Register
-module InsReg(/*clk,*/ rst, IRWr, iMemOut, inst);
-    // input clk;
+module InsReg(clk, rst, IRWr, iMemOut, inst);
+    input clk;
     input rst;
     input IRWr;
     input[31:0] iMemOut;

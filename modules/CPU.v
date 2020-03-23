@@ -35,9 +35,9 @@ module CPU(clk, rst);
     wire PCWr;
     assign PCWr = 1;
 
-    wire[31:0] iMemOut;//instruction memory read data
-    wire IRWr;//instruction register write signal
-    assign IRWr = 1;
+    //wire[31:0] iMemOut;//instruction memory read data
+    //wire IRWr;//instruction register write signal
+    //assign IRWr = 1;
       
     wire[31:0] rfReadData1, rfReadData2;
     wire[31:0] rfWriteData;
@@ -60,12 +60,14 @@ module CPU(clk, rst);
           .PCWr(PCWr),
           .NPC(NPC),
           .PC(PC));
+
+    InsMem insMem(.rst(rst), .address(PC), .dout(inst));
         
-    InsMem insMem(.address(PC), .dout(iMemOut));
-    InsReg insReg(.rst(rst), 
-                  .IRWr(IRWr), 
-                  .iMemOut(iMemOut), 
-                  .inst(inst));    
+//     InsMem insMem(.address(PC), .dout(iMemOut));
+//     InsReg insReg(.rst(rst), 
+//                   .IRWr(IRWr), 
+//                   .iMemOut(iMemOut), 
+//                   .inst(inst));    
 
     Control control(.inst(inst),
                     .RegDst(RegDst), 
@@ -120,8 +122,7 @@ module CPU(clk, rst);
     
     PCSrc pcsrc(.Jump(Jump), .Branch(Branch), .Zero(Zero), .NPCOp(NPCOp));
 
-    NPC npc(.rst(rst),
-            .PC(PC), 
+    NPC npc(.PC(PC), 
             .NPCOp(NPCOp), 
             .imm26(imm26), 
             .addr32(rfReadData1),

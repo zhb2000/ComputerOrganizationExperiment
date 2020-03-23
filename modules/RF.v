@@ -7,22 +7,19 @@ module RF(input         clk,//clock signal
           );
 
   reg [31:0] rf[31:0];//register file (with 32 32bit-registers)
-
-  integer i;
-
-  always @(posedge clk, posedge rst) 
-  begin
-    if (rst) //  reset
-      for (i = 1; i < 32; i = i + 1)
-        rf[i] <= 0;
-    else if (RFWr && A3 != 0)
-    begin
-      rf[A3] <= WD;
-      $display("r[%d] = %d(0x%8h)", A3, WD, WD);
-
-    end
-  end
-
   assign RD1 = (A1 != 0) ? rf[A1] : 0;
   assign RD2 = (A2 != 0) ? rf[A2] : 0;
+  integer i;
+
+  always @(negedge rst)//reset
+    for (i = 1; i < 32; i = i + 1)
+        rf[i] = 0;
+  
+  always @(negedge clk)// write back
+    if (!rst && RFWr && A3 != 0)
+    begin
+      rf[A3] = WD;
+      $display("r[%d] = %d(0x%8h)", A3, WD, WD);
+    end
+
 endmodule

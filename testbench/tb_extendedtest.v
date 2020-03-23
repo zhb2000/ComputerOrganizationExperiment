@@ -20,12 +20,10 @@ module tb_extendedtest();
     begin
         //$readmemh("dat_extendedtest.txt", cpu.insMem.insMem);
         $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/dat/dat_extendedtest.txt", cpu.insMem.insMem);
-
-        //$monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
-    end
-
-    initial
+        $monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
+        cnt = 0;
         clk = 0;
+    end
 
     initial
     begin
@@ -41,7 +39,7 @@ module tb_extendedtest();
         #5 clk = ~clk;
         if (clk)
         begin
-            $display("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
+            //$display("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
             //$display("A = 0x%8h, B = 0x%8h", cpu.operand1, cpu.operand2);
             //$display("rfWriteData = %d, RegSrc = %d", cpu.rfWriteData, cpu.RegSrc);
             cnt = cnt + 1;

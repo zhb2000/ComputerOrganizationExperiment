@@ -10,7 +10,7 @@ module DataMem(clk, DMWr, MemOp, MemEXT, address, din, dout);
     output reg[31:0] dout;//read data output
 
 
-    reg [31:0] dataMem [1023:0];//data memory(with 1023 32bit cells)
+    reg [31:0] dataMem [1023:0];//data memory(with 1024 32bit cells)
 
     wire[31:0] baseOffset;//offset from data base address(byte address)
     assign baseOffset = address - `DATA_BASE_ADDRESS;
@@ -27,8 +27,13 @@ module DataMem(clk, DMWr, MemOp, MemEXT, address, din, dout);
     EXT_8_32 byteExt(.in8(byteRead), .EXTOp(MemEXT), .out32(out_8_32));
     EXT_16_32 halfExt(.in16(halfRead), .EXTOp(MemEXT), .out32(out_16_32));
 
+    // integer i;
+    // always @(negedge rst)//reset
+    //     for (i = 0; i < 1024; i = i + 1)
+    //         dataMem[i] = 0;
+
     //write data
-    always @(posedge clk) 
+    always @(negedge clk) 
     begin
         if (DMWr)
         begin
