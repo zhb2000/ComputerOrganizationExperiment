@@ -16,7 +16,7 @@ module tb_mipstestloop_sim();
     initial
     begin
         //$readmemh("dat_mipstestloop_sim.txt", cpu.insMem.insMem);
-        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/dat/dat_mipstestloop_sim.txt", cpu.insMem.insMem);
+        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/single-cycle/dat/dat_mipstestloop_sim.txt", cpu.insMem.insMem);
         
         for(i=0;i<=20;i=i+1)
             $display("im[%d] = 0x%8h", i, cpu.insMem.insMem[i]);
