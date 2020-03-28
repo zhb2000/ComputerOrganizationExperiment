@@ -1,5 +1,17 @@
 # 计算机组成与设计课程实验
-## 单周期 MIPS CPU
+单周期、多周期的 MIPS CPU
+
+## 实验任务
+### 单周期
+- [x] 实现单周期CPU，支持15条指令
+- [x] 对单周期CPU进行指令扩展，支持35条指令
+
+### 多周期
+- [ ] 实现流水线（没有解决冒险）
+- [ ] 解决数据冒险
+- [ ] 解决控制冒险
+
+## 实现的指令
 实现了以下35条指令
 ### R-R运算
 add, sub, and, or, slt, sltu, addu, subu, sll, srl, sra, sllv, srlv, srav, xor, nor 
@@ -22,9 +34,3 @@ j, jal, jr, jalr
 | 32'h0000_3000     | 32'h0000_0000     | MARS Configuration: Compact, Data at Address 0 |
 | 32'h0000_0000     | 32'h0000_2000     | MARS Configuration: Compact, Text at Address 0 |
 | 32'h0000_0000     | 32'h0000_0000     | 指令和数据均从 0 开始编址                      |
-
-## 实验任务
-- [x] 实现单周期CPU，支持15条指令
-- [x] 对单周期CPU进行指令扩展，支持35条指令
-
-待续……
