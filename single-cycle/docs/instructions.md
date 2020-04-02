@@ -20,7 +20,7 @@
 | RegDst   | 选择目的寄存器       | rt      | rd           | 31           |
 | RegSrc   | 选择写寄存器的数据源 | ALU结果 | DataMem      | PC+4         |
 | Jump     | 跳转指令的种类       | 否      | 用立即数写PC | 用寄存器写PC |
-| Branch   | 是否是分支指令       | 否      | beq          | bne          |
+| Branch   | 分支指令的种类       | 否      | beq          | bne          |
 
 - ALUSrcA ---- 除了sll、srl、sra以外，其余情况ALUSrcA均为0
 - MemEXT ---- 在lbu、lhu中为zero，在lb、lh中为signed，其余情况无所谓

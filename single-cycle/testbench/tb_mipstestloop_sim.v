@@ -8,8 +8,10 @@
 `timescale 1ns/1ns
 module tb_mipstestloop_sim();
     reg clk, rst;
-
     CPU cpu(.clk(clk), .rst(rst));
+    wire[31:0] PC_disp = cpu.PC;
+    wire[31:0] inst_disp = cpu.inst;
+
     integer i = 0;
     integer cnt = 0;
 
@@ -29,10 +31,8 @@ module tb_mipstestloop_sim();
 
     initial
     begin
-        rst = 0;
-        #5
         rst = 1;
-        #5
+        #18
         rst = 0;
     end
 
@@ -47,7 +47,7 @@ module tb_mipstestloop_sim();
             cnt = cnt + 1; 
         end
         
-        if(cnt == 30)
+        if(cnt == 35)
         begin
             printregFile;
             $display("m[80/4] = %d", cpu.dataMem.dataMem[80/4]);

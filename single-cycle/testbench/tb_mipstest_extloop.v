@@ -26,10 +26,8 @@ module tb_mipstest_extloop();
 
     initial
     begin
-        rst = 0;
-        #5
         rst = 1;
-        #5
+        #18
         rst = 0;
     end
 

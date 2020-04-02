@@ -16,29 +16,17 @@ module CPU(clk, rst);
     wire RegWrite;//RF's write signal
 
     wire[31:0] inst;//32bit instruction
-    wire[5:0] opcode;
-    wire[5:0] funct;
-    wire[4:0] rs, rt, rd;
-    wire[4:0] shamt;
-    wire[15:0] imm16;
-    wire[25:0] imm26;
-    assign opcode = inst[31:26];
-    assign funct = inst[5:0];
-    assign rs = inst[25:21];
-    assign rt = inst[20:16];
-    assign rd = inst[15:11];
-    assign shamt = inst[10:6];
-    assign imm16 = inst[15:0];
-    assign imm26 = inst[25:0];
+    wire[5:0] opcode = inst[31:26];
+    wire[5:0] funct = inst[5:0];
+    wire[4:0] rs = inst[25:21];
+    wire[4:0] rt = inst[20:16];
+    wire[4:0] rd = inst[15:11];
+    wire[4:0] shamt = inst[10:6];
+    wire[15:0] imm16 = inst[15:0];
+    wire[25:0] imm26 = inst[25:0];
 
     wire[31:0] PC;
-    wire PCWr;
-    assign PCWr = 1;
 
-    //wire[31:0] iMemOut;//instruction memory read data
-    //wire IRWr;//instruction register write signal
-    //assign IRWr = 1;
-      
     wire[31:0] rfReadData1, rfReadData2;
     wire[31:0] rfWriteData;
     wire[4:0] rfAddr3;//write register address
@@ -57,17 +45,10 @@ module CPU(clk, rst);
 
     PC pc(.clk(clk),
           .rst(rst),
-          .PCWr(PCWr),
           .NPC(NPC),
           .PC(PC));
 
     InsMem insMem(.rst(rst), .address(PC), .dout(inst));
-        
-//     InsMem insMem(.address(PC), .dout(iMemOut));
-//     InsReg insReg(.rst(rst), 
-//                   .IRWr(IRWr), 
-//                   .iMemOut(iMemOut), 
-//                   .inst(inst));    
 
     Control control(.inst(inst),
                     .RegDst(RegDst), 
