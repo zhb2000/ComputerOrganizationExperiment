@@ -1,5 +1,7 @@
 module EX_MEM_Reg(
     input clk,
+    input rst,
+    input clear,
     input[31:0] EX_aluResult,
     input EX_RegWrite,
     input[1:0] EX_RegDst,
@@ -9,8 +11,8 @@ module EX_MEM_Reg(
     input EX_MemWrite,
     input EX_MemRead,
     input[31:0] EX_rfOut2,
-    input[31:0] EX_rd,
-    input[31:0] EX_rt,
+    input[4:0] EX_rd,
+    input[4:0] EX_rt,
     input[31:0] EX_PC,
 
     output reg[31:0] MEM_aluResult,
@@ -22,8 +24,8 @@ module EX_MEM_Reg(
     output reg MEM_MemWrite,
     output reg MEM_MemRead,
     output reg[31:0] MEM_rfOut2,
-    output reg[31:0] MEM_rd,
-    output reg[31:0] MEM_rt,
+    output reg[4:0] MEM_rd,
+    output reg[4:0] MEM_rt,
     output reg[31:0] MEM_PC
 );
 
@@ -42,5 +44,22 @@ begin
     MEM_rt <= EX_rt;
     MEM_PC <= EX_PC;
 end
+
+always @(negedge clk)
+    if (rst || clear)
+    begin
+        MEM_aluResult <= 0;
+        MEM_RegWrite <= 0;
+        MEM_RegDst <= 0;
+        MEM_RegSrc <= 0;
+        MEM_MemOp <= 0;
+        MEM_MemEXT <= 0;
+        MEM_MemWrite <= 0;
+        MEM_MemRead <= 0;
+        MEM_rfOut2 <= 0;
+        MEM_rd <= 0;
+        MEM_rt <= 0;
+        MEM_PC <= 0;
+    end
 
 endmodule // EX_MEM_Reg

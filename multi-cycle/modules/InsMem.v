@@ -13,8 +13,8 @@ module InsMem(rst, address, dout);
     wire[9:0] index;//index of the cell
     assign index = baseOffset[11:2];//only use 10bit address
 
-    always @(posedge rst, negedge rst)
-        dout = 0;//remain 0 when posedge or negedge
+    always @(negedge rst)
+        dout = 0;
 
     always @(*)
         if (rst)

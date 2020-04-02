@@ -1,8 +1,7 @@
 `include "ctrl_encode_def.v"
-module CPU(
-    input clk,
-    input rst
-);
+module CPU(clk, rst);
+    input clk;
+    input rst;
 
     wire[31:0] IF_PC;
     wire[31:0] IF_inst;
@@ -11,9 +10,9 @@ module CPU(
 
     wire[31:0] ID_PC;
     wire[31:0] ID_inst;
-    wire[31:0] ID_rs = ID_inst[25:21];
-    wire[31:0] ID_rt = ID_inst[20:16];
-    wire[31:0] ID_rd = ID_inst[15:11];
+    wire[4:0] ID_rs = ID_inst[25:21];
+    wire[4:0] ID_rt = ID_inst[20:16];
+    wire[4:0] ID_rd = ID_inst[15:11];
     wire[4:0] ID_shamt5 = ID_inst[10:6];
     wire[15:0] ID_imm16 = ID_inst[15:0];
     wire[25:0] ID_imm26 = ID_inst[25:0];
@@ -47,12 +46,12 @@ module CPU(
     wire EX_RegWrite;
     wire[31:0] EX_rfOut1;
     wire[31:0] EX_rfOut2;
-    wire[31:0] EX_imm16;
+    wire[15:0] EX_imm16;
     wire[31:0] EX_imm32;
     wire[31:0] EX_shamt32;
     wire[31:0] EX_PC;
-    wire[31:0] EX_rd;
-    wire[31:0] EX_rt;
+    wire[4:0] EX_rd;
+    wire[4:0] EX_rt;
     wire[31:0] EX_aluResult;
     wire[31:0] EX_operand1;
     wire[31:0] EX_operand2;
@@ -67,27 +66,26 @@ module CPU(
     wire MEM_MemWrite;
     wire MEM_MemRead;
     wire[31:0] MEM_rfOut2;
-    wire[31:0] MEM_rd;
-    wire[31:0] MEM_rt;
+    wire[4:0] MEM_rd;
+    wire[4:0] MEM_rt;
     wire[31:0] MEM_PC;
     wire[31:0] MEM_dmOut;
 
     wire[31:0] WB_aluResult;
     wire[31:0] WB_dmOut;
     wire[1:0] WB_RegSrc;
-    wire[31:0] WB_rt;
-    wire[31:0] WB_rd;
+    wire[4:0] WB_rt;
+    wire[4:0] WB_rd;
     wire[1:0] WB_RegDst;
     wire WB_RegWrite;
     wire[31:0] WB_PC;
-    wire[31:0] WB_rfWriteAddr;
+    wire[4:0] WB_rfWriteReg;
     wire[31:0] WB_rfWriteData;
 
 
     PC pc(
         .clk(clk),
         .rst(rst),
-        .PCWr(1'b1),
         .NPC(IF_NPC),
         .PC(IF_PC)
     );
@@ -118,6 +116,8 @@ module CPU(
 
     IF_ID_Reg if_id_reg(
         .clk(clk),
+        .rst(rst),
+        .clear(1'b0),
         .IF_PC(IF_PC),
         .IF_inst(IF_inst),
         .ID_PC(ID_PC),
@@ -134,6 +134,7 @@ module CPU(
         .MemOp(ID_MemOp),
         .MemEXT(ID_MemEXT),
         .MemWrite(ID_MemWrite),
+        .MemRead(ID_MemRead),
         .ALUSrcA(ID_ALUSrcA), 
         .ALUSrcB(ID_ALUSrcB), 
         .RegWrite(ID_RegWrite)
@@ -145,7 +146,7 @@ module CPU(
         .RFWr(WB_RegWrite),
         .A1(ID_rs), 
         .A2(ID_rt), 
-        .A3(WB_rfWriteAddr),
+        .A3(WB_rfWriteReg),
         .WD(WB_rfWriteData),
         .RD1(ID_rfOut1), 
         .RD2(ID_rfOut2)
@@ -164,6 +165,8 @@ module CPU(
 
     ID_EX_Reg id_ex_reg(
         .clk(clk),
+        .rst(rst),
+        .clear(1'b0),
         .ID_RegDst(ID_RegDst),
         .ID_Branch(ID_Branch),
         .ID_RegSrc(ID_RegSrc),
@@ -227,6 +230,8 @@ module CPU(
     
     EX_MEM_Reg ex_mem_reg(
         .clk(clk),
+        .rst(rst),
+        .clear(1'b0),
         .EX_aluResult(EX_aluResult),
         .EX_RegWrite(EX_RegWrite),
         .EX_RegDst(EX_RegDst),
@@ -255,7 +260,8 @@ module CPU(
 
     DataMem dataMem(
         .clk(clk), 
-        .DMWr(MEM_MemWrite), 
+        .DMWr(MEM_MemWrite),
+        .MemRead(MEM_MemRead),
         .MemOp(MEM_MemOp),
         .MemEXT(MEM_MemEXT),
         .address(MEM_aluResult), 
@@ -265,6 +271,8 @@ module CPU(
 
     MEM_WB_Reg mem_wb_reg(
         .clk(clk),
+        .rst(rst),
+        .clear(1'b0),
         .MEM_aluResult(MEM_aluResult),
         .MEM_dmOut(MEM_dmOut),
         .MEM_RegSrc(MEM_RegSrc),
@@ -289,7 +297,8 @@ module CPU(
         .d2(WB_PC + 32'd4), 
         .d3(32'bz),
         .s(WB_RegSrc),
-        .y(WB_rfWriteData));
+        .y(WB_rfWriteData)
+    );
 
     mux4 #(5) selWriteReg(
         .d0(WB_rt), 
@@ -297,6 +306,7 @@ module CPU(
         .d2(5'd31), 
         .d3(5'bz),
         .s(WB_RegDst),
-        .y(WB_rfWriteAddr));
+        .y(WB_rfWriteReg)
+    );
 
 endmodule // CPU

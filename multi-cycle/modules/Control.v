@@ -24,6 +24,8 @@ module Control(
     output reg MemEXT,
     //DataMem's write signal
     output reg MemWrite,
+    //DataMem's read signal
+    output reg MemRead,
     //choose ALU's operand1
     //0: RD1 from RF; 1: 5bit shamt
     output reg ALUSrcA,
@@ -152,6 +154,11 @@ module Control(
         MemWrite <= (opcode == `OPCODE_SW 
                   || opcode == `OPCODE_SB 
                   || opcode == `OPCODE_SH);//Store -- MemWrite = 1
+        
+        //MemRead
+        MemRead <= (opcode == `OPCODE_LW || opcode == `OPCODE_LB 
+                 || opcode == `OPCODE_LH || opcode == `OPCODE_LBU 
+                 || opcode == `OPCODE_LHU);
 
         //ALUSrcA
         ALUSrcA <= (opcode == `OPCODE_R_JR_JALR) 
