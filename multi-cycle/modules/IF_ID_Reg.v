@@ -1,9 +1,9 @@
 module IF_ID_Reg(
-    input clk;
-    input[31:0] IF_PC;
-    input[31:0] IF_inst;
-    output reg[31:0] ID_PC;
-    output reg[31:0] ID_inst;
+    input clk,
+    input[31:0] IF_PC,
+    input[31:0] IF_inst,
+    output reg[31:0] ID_PC,
+    output reg[31:0] ID_inst
 );
 
 always @(posedge clk) 
