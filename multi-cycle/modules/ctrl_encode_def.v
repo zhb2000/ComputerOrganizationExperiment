@@ -27,10 +27,38 @@
 `define EXT_ZERO 1'b0
 `define EXT_SIGNED 1'b1
 
+//ALUSrcA
+`define ALUSRCA_RF 1'b0
+`define ALUSRCA_SHAMT 1'b1
+
+//ALUSrcB
+`define ALUSRCB_RF 1'b0
+`define ALUSRCB_IMM 1'b1
+
 //MemOp
 `define MEM_BYTE 2'd0
 `define MEM_HALF 2'd1
 `define MEM_WORD 2'd2
+
+//RegDst
+`define REGDST_RT 2'd0
+`define REGDST_RD 2'd1
+`define REGDST_31 2'd2
+
+//RegSrc
+`define REGSRC_ALU 2'd0
+`define REGSRC_DMEM 2'd1
+`define REGSRC_PCPLUS4 2'd2
+
+//Jump type
+`define JUMP_NONE 2'd0
+`define JUMP_IMM 2'd1
+`define JUMP_REG 2'd2
+
+//Branch type
+`define BRANCH_NONE 2'd0
+`define BRANCH_BEQ 2'd1
+`define BRANCH_BNE 2'd2
 
 // instruction opcode
 `define OPCODE_ADDI 6'h8 // addi
