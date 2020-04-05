@@ -31,7 +31,7 @@ module ByPassingEX(
         if (MEM_RegWrite && MEM_WriteReg != 5'd0 && MEM_WriteReg == EX_rs)
         begin
             case (MEM_RegSrc)
-                `REGSRC_ALU: EX_correctRFOut1 = MEM_aluResult;
+                `REGSRC_ALU: EX_correctRFOut1 = MEM_aluResult;//from previous aluResult
                 `REGSRC_PCPLUS4: EX_correctRFOut1 = MEM_PC + 32'd4;//from previous PC+4
             endcase
         end
@@ -49,7 +49,7 @@ module ByPassingEX(
         if (MEM_RegWrite && MEM_WriteReg != 5'd0 && MEM_WriteReg == EX_rt)
         begin
             case (MEM_RegSrc)
-                `REGSRC_ALU: EX_correctRFOut2 = MEM_aluResult;
+                `REGSRC_ALU: EX_correctRFOut2 = MEM_aluResult;///from previous aluResult
                 `REGSRC_PCPLUS4: EX_correctRFOut2 = MEM_PC + 32'd4;//from previous PC+4
             endcase
         end
