@@ -248,7 +248,7 @@ module CPU(clk, rst);
         .ID_shamt32(ID_shamt32),
         .EX_RegWrite(EX_RegWrite),
         .EX_RegDst(EX_RegDst),
-        .EX_RegSrc(EX_RegDst),
+        .EX_RegSrc(EX_RegSrc),
         .EX_ALUOp(EX_ALUOp),
         .EX_ALUSrcA(EX_ALUSrcA),
         .EX_ALUSrcB(EX_ALUSrcB),
