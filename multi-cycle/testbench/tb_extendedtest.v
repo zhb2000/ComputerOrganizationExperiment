@@ -19,12 +19,32 @@ module tb_extendedtest();
     wire[31:0] p4_MEM_PC = cpu.MEM_PC;
     wire[31:0] p5_WB_PC = cpu.WB_PC;
 
+    //wire[31:0] d_WB_rfWriteData = cpu.WB_rfWriteData;
+
+    wire[31:0] d_ID_crf1 = cpu.ID_correctRFOut1;
+    wire[31:0] d_ID_crf2 = cpu.ID_correctRFOut2;
+    //wire[1:0] d_MEM_RegSrc = cpu.MEM_RegSrc;
+
+    // wire[31:0] d3_EX_aluResult = cpu.EX_aluResult;
+    // wire[31:0] d4_MEM_aluResult = cpu.MEM_aluResult;
+    // wire[31:0] d4_WB_aluResult = cpu.WB_aluResult;
+    
+    // wire[1:0] d2_ID_RegSrc = cpu.ID_RegSrc;
+    // wire[1:0] d3_EX_RegSrc = cpu.EX_RegSrc;
+    // wire[1:0] d4_MEM_RegSrc = cpu.MEM_RegSrc;
+    // wire[1:0] d5_WB_RegSrc = cpu.WB_RegSrc;
+
+    // wire d2_ID_RegWrite = cpu.ID_RegWrite;
+    // wire d3_EX_RegWrite = cpu.EX_RegWrite;
+    // wire d4_MEM_RegWrite = cpu.MEM_RegWrite;
+    // wire d5_WB_RegWrite = cpu.WB_RegWrite;
+
     //wire[31:0] i1_IF_inst = cpu.IF_inst;
     //wire[31:0] i2_ID_inst = cpu.ID_inst;
     //wire[31:0] i3_EX_inst = cpu.EX_inst;
     //wire[31:0] i4_MEM_inst = cpu.MEM_inst;
     //wire[31:0] i5_WB_inst = cpu.WB_inst;
-    
+
     //wire d_PCWr = cpu.PCWr_DataHazard;
     //wire d_IFIDWrite = cpu.IFIDWrite_DataHazard;
     //wire d_IFIDFlush = cpu.IFIDFlush_CtrlHazard;

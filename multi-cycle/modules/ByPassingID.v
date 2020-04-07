@@ -31,47 +31,51 @@ module ByPassingID(
     //ID_correctRFOut1
     always @(*) 
     begin
-        if (useRegAtID)
+        if (useRegAtID)//use at ID
         begin
             //forward from previous instruction(now at EX)
             if (EX_RegWrite && EX_WriteReg != 5'd0 && EX_WriteReg == ID_rs)
                 if (EX_RegSrc == `REGSRC_PCPLUS4)
                     ID_correctRFOut1 = EX_PC + 32'd4;//from previous PC+4
-                else
-                    ID_correctRFOut1 = ID_rfOut1;
+                /*REGSRC_DMEM or REGSRC_ALU will cause stall*/
             //forward from pre-previous instruction(now at WB)
             else if (MEM_RegWrite && MEM_WriteReg != 5'd0 && MEM_WriteReg == ID_rs)
                 case (MEM_RegSrc)
                     `REGSRC_PCPLUS4: ID_correctRFOut1 = MEM_PC + 32'd4;
                     `REGSRC_ALU: ID_correctRFOut1 = MEM_aluResult;
-                    default: ID_correctRFOut1 = ID_rfOut1;
+                    /*REGSRC_DMEM will cause stall*/
                 endcase
+            //use at ID but no data hazard
             else
                 ID_correctRFOut1 = ID_rfOut1;
         end
+        else//not use reg at ID
+            ID_correctRFOut1 = ID_rfOut1;
     end
 
     //ID_correctRFOut2
     always @(*) 
     begin
-        if (useRegAtID)
+        if (useRegAtID)//use at ID
         begin
             //forward from previous instruction(now at EX)
             if (EX_RegWrite && EX_WriteReg != 5'd0 && EX_WriteReg == ID_rt)
                 if (EX_RegSrc == `REGSRC_PCPLUS4)
                     ID_correctRFOut2 = EX_PC + 32'd4;//from previous PC+4
-                else
-                    ID_correctRFOut2 = ID_rfOut2;
+                /*REGSRC_DMEM or REGSRC_ALU will cause stall*/
             //forward from pre-previous instruction(now at WB)
             else if (MEM_RegWrite && MEM_WriteReg != 5'd0 && MEM_WriteReg == ID_rt)
                 case (MEM_RegSrc)
                     `REGSRC_PCPLUS4: ID_correctRFOut2 = MEM_PC + 32'd4;
                     `REGSRC_ALU: ID_correctRFOut2 = MEM_aluResult;
-                    default: ID_correctRFOut2 = ID_rfOut2;
+                    /*REGSRC_DMEM will cause stall*/
                 endcase
+            //use at ID but no data hazard
             else
                 ID_correctRFOut2 = ID_rfOut2;
         end
+        else//not use reg at ID
+            ID_correctRFOut2 = ID_rfOut2;
     end
 
 endmodule // ByPassingID

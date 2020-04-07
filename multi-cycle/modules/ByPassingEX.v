@@ -33,7 +33,7 @@ module ByPassingEX(
             case (MEM_RegSrc)
                 `REGSRC_ALU: EX_correctRFOut1 = MEM_aluResult;//from previous aluResult
                 `REGSRC_PCPLUS4: EX_correctRFOut1 = MEM_PC + 32'd4;//from previous PC+4
-                default: EX_correctRFOut1 = EX_rfOut1;
+                /*REGSRC_DMEM will cause stall*/
             endcase
         end
         //forward from pre-previous instruction(now at WB)
@@ -52,7 +52,7 @@ module ByPassingEX(
             case (MEM_RegSrc)
                 `REGSRC_ALU: EX_correctRFOut2 = MEM_aluResult;///from previous aluResult
                 `REGSRC_PCPLUS4: EX_correctRFOut2 = MEM_PC + 32'd4;//from previous PC+4
-                default: EX_correctRFOut2 = EX_rfOut2;
+                /*REGSRC_DMEM will cause stall*/
             endcase
         end
         //forward from pre-previous instruction(now at WB)
