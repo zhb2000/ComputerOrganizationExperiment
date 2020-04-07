@@ -1,11 +1,11 @@
 `include "ctrl_encode_def.v"
 //Generate NPCOp signal, working at ID
-module PCSrc(Jump, Branch, ID_Equal, NPCOp);
-    input[1:0] ID_Jump;//jump type
-    input[1:0] ID_Branch;//branch type
-    input ID_Equal;//GPR[rs]==GPR[rt]
-    output reg[1:0] ID_NPCOp;
-
+module PCSrc(
+    input[1:0] ID_Jump,//jump type
+    input[1:0] ID_Branch,//branch type
+    input ID_Equal,//GPR[rs]==GPR[rt]
+    output reg[1:0] ID_NPCOp
+);
     always @(*) 
     begin
         if (ID_Jump == `JUMP_IMM) 

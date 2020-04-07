@@ -14,7 +14,7 @@ module InsMem(rst, address, dout);
     assign index = baseOffset[11:2];//only use 10bit address
 
     always @(negedge rst)
-        dout = 0;
+        dout <= 0;
 
     always @(*)
         if (rst)

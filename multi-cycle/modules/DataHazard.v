@@ -31,18 +31,33 @@ module DataHazard(
     begin
         //hazard with previous instruction
         if (EX_RegWrite && EX_WriteReg != 5'd0 
-            && (EX_WriteReg == ID_rs || EX_WriteReg == ID_rt))
-            if (EX_RegSrc == `REGSRC_DMEM
-                || useRegAtID && EX_RegSrc == `REGSRC_ALU)
+            && (EX_WriteReg == ID_rs || EX_WriteReg == ID_rt)
+            && (EX_RegSrc == `REGSRC_DMEM
+                || useRegAtID && EX_RegSrc == `REGSRC_ALU))
                 stall = 1'b1;
+            // begin
+            //     PCWr = 1'b0;
+            //     IFIDWrite = 1'b0;
+            //     IDEXClearCtrl = 1'b1;
+            // end
         //hazard with pre-previous instruction
         else if (MEM_RegWrite && MEM_WriteReg != 5'd0
-            && (MEM_WriteReg == ID_rs || MEM_WriteReg == ID_rs))
-            if (useRegAtID && MEM_RegSrc == `REGSRC_DMEM)
+            && (MEM_WriteReg == ID_rs || MEM_WriteReg == ID_rs)
+            && (useRegAtID && MEM_RegSrc == `REGSRC_DMEM))
                 stall = 1'b1;
+            // begin
+            //     PCWr = 1'b0;
+            //     IFIDWrite = 1'b0;
+            //     IDEXClearCtrl = 1'b1;
+            // end
         //no data hazard or hazard can be solved by bypassing in EX or ID
         else
             stall = 1'b0;
+        // begin
+        //     PCWr = 1'b1;
+        //     IFIDWrite = 1'b1;
+        //     IDEXClearCtrl = 1'b0;
+        // end 
     end
 
 endmodule // DataHazard

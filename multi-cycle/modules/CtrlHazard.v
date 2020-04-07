@@ -3,11 +3,9 @@
 //working at ID
 module CtrlHazard(
     input[1:0] ID_NPCOp,
-    output IFIDClearCtrl,
-    output IDEXClearCtrl
+    output IFIDFlush
 );
     wire goAway = ID_NPCOp != `NPC_PLUS4;
-    assign IFIDClearCtrl = goAway;//flush the instruction at IF
-    assign IDEXClearCtrl = goAway;//flush the instruction at ID
+    assign IFIDFlush = goAway;//flush the instruction at IF
 
 endmodule // CtrlHazard

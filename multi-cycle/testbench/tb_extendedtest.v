@@ -11,26 +11,41 @@
 `timescale 1ns/1ns
 module tb_extendedtest();
     reg clk, rst;
-
     CPU cpu(.clk(clk), .rst(rst));
-    integer i = 0;
-    integer cnt = 0;
+
+    wire[31:0] p1_IF_PC = cpu.IF_PC;
+    wire[31:0] p2_ID_PC = cpu.ID_PC;
+    wire[31:0] p3_EX_PC = cpu.EX_PC;
+    wire[31:0] p4_MEM_PC = cpu.MEM_PC;
+    wire[31:0] p5_WB_PC = cpu.WB_PC;
+
+    //wire[31:0] i1_IF_inst = cpu.IF_inst;
+    //wire[31:0] i2_ID_inst = cpu.ID_inst;
+    //wire[31:0] i3_EX_inst = cpu.EX_inst;
+    //wire[31:0] i4_MEM_inst = cpu.MEM_inst;
+    //wire[31:0] i5_WB_inst = cpu.WB_inst;
+    
+    //wire d_PCWr = cpu.PCWr_DataHazard;
+    //wire d_IFIDWrite = cpu.IFIDWrite_DataHazard;
+    //wire d_IFIDFlush = cpu.IFIDFlush_CtrlHazard;
+    //wire d_EX_RegWrite = cpu.EX_RegWrite;
+    //wire d_MEM_RegWrite = cpu.MEM_RegWrite;
+
+    integer _cnt = 0;
 
     initial
     begin
         //$readmemh("dat_extendedtest.txt", cpu.insMem.insMem);
-        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/single-cycle/dat/dat_extendedtest.txt", cpu.insMem.insMem);
-        $monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
-        cnt = 0;
+        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/multi-cycle/dat/dat_extendedtest.txt", cpu.insMem.insMem);
+        //$monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
+        _cnt = 0;
         clk = 0;
     end
 
     initial
     begin
-        rst = 0;
-        #5
         rst = 1;
-        #5
+        #18
         rst = 0;
     end
 
@@ -39,16 +54,14 @@ module tb_extendedtest();
         #5 clk = ~clk;
         if (clk)
         begin
-            //$display("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
-            //$display("A = 0x%8h, B = 0x%8h", cpu.operand1, cpu.operand2);
-            //$display("rfWriteData = %d, RegSrc = %d", cpu.rfWriteData, cpu.RegSrc);
-            cnt = cnt + 1;
+            _cnt = _cnt + 1;
         end
         
-        if(cnt == 45)
+        if(_cnt == (45+20)*5)
         begin
             printRegFile;
             printDataMem;
+            $stop();
         end
     end
 
@@ -72,7 +85,6 @@ module tb_extendedtest();
             $display("m[0x18/4] = 0x%8h", cpu.dataMem.dataMem[32'h18/4]);
             $display("m[0x1c/4] = 0x%8h", cpu.dataMem.dataMem[32'h1c/4]);
             $display("m[0x20/4] = 0x%8h", cpu.dataMem.dataMem[32'h20/4]);
-            $stop();
         end
     endtask
 endmodule // tb_extendedtest
