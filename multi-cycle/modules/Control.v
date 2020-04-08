@@ -60,7 +60,7 @@ module Control(
             Jump <= 2'd1;//j, jal -- imm26
         else if(opcode == `OPCODE_R_JR_JALR 
             && (funct == `FUNCT_JR || funct == `FUNCT_JALR))
-            Jump <= 2'd2;//jr, jal -- reg
+            Jump <= 2'd2;//jr, jalr -- reg
         else
             Jump <= 2'd0;//not jump
         
