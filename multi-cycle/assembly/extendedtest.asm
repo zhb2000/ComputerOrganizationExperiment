@@ -3,6 +3,9 @@
 # sll srl sra sllv srlv srav
 # sw sh sb
 # lw lh lhu lb lbu
+
+# Configuration: Compact, Data at Address 0
+# text base address 0x0000_3000, data base address 0x0000_0000
    
 lui   $3, 0x9876        # $3=0x98760000                               # 3c039876
 ori   $2, $0, 0x1234    # $2=0x1234                                   # 34021234
