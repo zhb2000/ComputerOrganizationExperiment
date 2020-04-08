@@ -20,7 +20,7 @@ module PC(
         begin
             if (!start)
             begin
-                PC <= 32'd0;
+                PC <= `TEXT_BASE_ADDRESS;
                 start <= 1'b1;
             end
             else if (PCWr)
