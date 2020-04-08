@@ -14,7 +14,7 @@ main:   addi $2, $0, 5      # initialize $2 = 5      0      20020005
         addi $3, $0, 12     # initialize $3 = 12     4      2003000c
         addi $7, $3, -9     # initialize $7 = 3      8      2067fff7 
         addi $1, $0, 0x304c # initialize $1 = 0x304c c      2001004c
-call_a: jalr $31,$1         # jump to cal           10      0020f809//
+call_a: jalr $31,$1         # jump to cal           10      0020f809
         or   $4, $7, $2     # $4 <= 3 or 5 = 7      14      00e22025
         and  $5, $3, $4     # $5 <= 12 and 7 = 4    18      00642824
         add  $5, $5, $4     # $5 = 4 + 7 = 11       1c      00a42820
