@@ -26,8 +26,10 @@ module DataMem(
     EXT_16_32 halfExt(.in16(halfRead), .EXTOp(MemEXT), .out32(out_16_32));
 
     //write data
-    always @(negedge clk) 
+    always @(negedge clk)
+    begin
         if (DMWr)
+        begin
             case (MemOp)
                 `MEM_BYTE:
                 begin
@@ -56,9 +58,12 @@ module DataMem(
                     $display("store word, m[%d/4=%d] = %d(0x%8h),", baseOffset, index, din, din);
                 end
             endcase
+        end
+    end
 
     //read data
     always @(*) 
+    begin
         case (MemOp)
             `MEM_BYTE:
             begin
@@ -81,5 +86,6 @@ module DataMem(
             end
             `MEM_WORD: dout = indexData;
         endcase
+    end
     
 endmodule // DataMem

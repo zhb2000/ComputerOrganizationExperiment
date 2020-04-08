@@ -7,7 +7,7 @@
 //sll srl sra sllv srlv srav
 //sw sh sb
 //lw lh lhu lb lbu
-
+`define INST_NUM 45
 `timescale 1ns/1ns
 module tb_extendedtest();
     reg clk, rst;
@@ -19,10 +19,9 @@ module tb_extendedtest();
     wire[31:0] p4_MEM_PC = cpu.MEM_PC;
     wire[31:0] p5_WB_PC = cpu.WB_PC;
 
+    //wire[31:0] d_ID_crf1 = cpu.ID_correctRFOut1;
+    //wire[31:0] d_ID_crf2 = cpu.ID_correctRFOut2;
     //wire[31:0] d_WB_rfWriteData = cpu.WB_rfWriteData;
-
-    wire[31:0] d_ID_crf1 = cpu.ID_correctRFOut1;
-    wire[31:0] d_ID_crf2 = cpu.ID_correctRFOut2;
     //wire[1:0] d_MEM_RegSrc = cpu.MEM_RegSrc;
 
     // wire[31:0] d3_EX_aluResult = cpu.EX_aluResult;
@@ -77,7 +76,7 @@ module tb_extendedtest();
             _cnt = _cnt + 1;
         end
         
-        if(_cnt == (45+20)*5)
+        if(_cnt == (`INST_NUM+20)*5)
         begin
             printRegFile;
             printDataMem;
