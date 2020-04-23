@@ -9,19 +9,19 @@
 //lw lh lhu lb lbu
 
 `timescale 1ns/1ns
+`define INST_NUM 45
 module tb_extendedtest();
     reg clk, rst;
 
     CPU cpu(.clk(clk), .rst(rst));
-    integer i = 0;
-    integer cnt = 0;
+    integer _cnt = 0;
 
     initial
     begin
-        //$readmemh("dat_extendedtest.txt", cpu.insMem.insMem);
-        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/single-cycle/dat/dat_extendedtest.txt", cpu.insMem.insMem);
+        //$readmemh("dat_extendedtest.txt", cpu.insMem.innerIM.ROM);
+        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/single-cycle/dat/dat_extendedtest.txt", cpu.insMem.innerIM.ROM);
         $monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
-        cnt = 0;
+        _cnt = 0;
         clk = 0;
     end
 
@@ -37,13 +37,10 @@ module tb_extendedtest();
         #5 clk = ~clk;
         if (clk)
         begin
-            //$display("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
-            //$display("A = 0x%8h, B = 0x%8h", cpu.operand1, cpu.operand2);
-            //$display("rfWriteData = %d, RegSrc = %d", cpu.rfWriteData, cpu.RegSrc);
-            cnt = cnt + 1;
+            _cnt = _cnt + 1;
         end
         
-        if(cnt == 45)
+        if(_cnt == `INST_NUM)
         begin
             printRegFile;
             printDataMem;
@@ -61,15 +58,15 @@ module tb_extendedtest();
 
     task printDataMem;
         begin
-            $display("m[0/4] = 0x%8h", cpu.dataMem.dataMem[0/4]);
-            $display("m[4/4] = 0x%8h", cpu.dataMem.dataMem[4/4]);
-            $display("m[8/4] = 0x%8h", cpu.dataMem.dataMem[8/4]);
-            $display("m[0xc/4] = 0x%8h", cpu.dataMem.dataMem[32'hc/4]);
-            $display("m[0x10/4] = 0x%8h", cpu.dataMem.dataMem[32'h10/4]);
-            $display("m[0x14/4] = 0x%8h", cpu.dataMem.dataMem[32'h14/4]);
-            $display("m[0x18/4] = 0x%8h", cpu.dataMem.dataMem[32'h18/4]);
-            $display("m[0x1c/4] = 0x%8h", cpu.dataMem.dataMem[32'h1c/4]);
-            $display("m[0x20/4] = 0x%8h", cpu.dataMem.dataMem[32'h20/4]);
+            $display("m[0/4] = 0x%8h", cpu.dataMem.innerDM.dmem[0/4]);
+            $display("m[4/4] = 0x%8h", cpu.dataMem.innerDM.dmem[4/4]);
+            $display("m[8/4] = 0x%8h", cpu.dataMem.innerDM.dmem[8/4]);
+            $display("m[0xc/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'hc/4]);
+            $display("m[0x10/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'h10/4]);
+            $display("m[0x14/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'h14/4]);
+            $display("m[0x18/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'h18/4]);
+            $display("m[0x1c/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'h1c/4]);
+            $display("m[0x20/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'h20/4]);
             $stop();
         end
     endtask

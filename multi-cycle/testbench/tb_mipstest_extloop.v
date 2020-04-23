@@ -25,8 +25,8 @@ module tb_mipstest_extloop();
 
     initial
     begin
-        //$readmemh("dat_mipstestloopjal_sim.txt", cpu.insMem.insMem);
-        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/multi-cycle/dat/dat_mipstest_extloop.txt", cpu.insMem.insMem);
+        //$readmemh("dat_mipstestloopjal_sim.txt", cpu.insMem.innerIM.ROM);
+        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/multi-cycle/dat/dat_mipstest_extloop.txt", cpu.insMem.innerIM.ROM);
         //$monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
         _cnt = 0;
         clk = 0;
@@ -64,8 +64,8 @@ module tb_mipstest_extloop();
 
     task printDataMem;
         begin
-            $display("m[80/4] = %d", cpu.dataMem.dataMem[80/4]);
-            $display("m[84/4] = %d", cpu.dataMem.dataMem[84/4]);
+            $display("m[80/4] = %d", cpu.dataMem.innerDM.dmem[80/4]);
+            $display("m[84/4] = %d", cpu.dataMem.innerDM.dmem[84/4]);
         end
     endtask
 endmodule // tb_mipstest_extloop

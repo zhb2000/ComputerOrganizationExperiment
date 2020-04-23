@@ -54,8 +54,8 @@ module tb_extendedtest();
 
     initial
     begin
-        //$readmemh("dat_extendedtest.txt", cpu.insMem.insMem);
-        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/multi-cycle/dat/dat_extendedtest.txt", cpu.insMem.insMem);
+        //$readmemh("dat_extendedtest.txt", cpu.insMem.innerIM.ROM);
+        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/multi-cycle/dat/dat_extendedtest.txt", cpu.insMem.innerIM.ROM);
         //$monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
         _cnt = 0;
         clk = 0;
@@ -95,15 +95,15 @@ module tb_extendedtest();
 
     task printDataMem;
         begin
-            $display("m[0/4] = 0x%8h", cpu.dataMem.dataMem[0/4]);
-            $display("m[4/4] = 0x%8h", cpu.dataMem.dataMem[4/4]);
-            $display("m[8/4] = 0x%8h", cpu.dataMem.dataMem[8/4]);
-            $display("m[0xc/4] = 0x%8h", cpu.dataMem.dataMem[32'hc/4]);
-            $display("m[0x10/4] = 0x%8h", cpu.dataMem.dataMem[32'h10/4]);
-            $display("m[0x14/4] = 0x%8h", cpu.dataMem.dataMem[32'h14/4]);
-            $display("m[0x18/4] = 0x%8h", cpu.dataMem.dataMem[32'h18/4]);
-            $display("m[0x1c/4] = 0x%8h", cpu.dataMem.dataMem[32'h1c/4]);
-            $display("m[0x20/4] = 0x%8h", cpu.dataMem.dataMem[32'h20/4]);
+            $display("m[0/4] = 0x%8h", cpu.dataMem.innerDM.dmem[0/4]);
+            $display("m[4/4] = 0x%8h", cpu.dataMem.innerDM.dmem[4/4]);
+            $display("m[8/4] = 0x%8h", cpu.dataMem.innerDM.dmem[8/4]);
+            $display("m[0xc/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'hc/4]);
+            $display("m[0x10/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'h10/4]);
+            $display("m[0x14/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'h14/4]);
+            $display("m[0x18/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'h18/4]);
+            $display("m[0x1c/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'h1c/4]);
+            $display("m[0x20/4] = 0x%8h", cpu.dataMem.innerDM.dmem[32'h20/4]);
         end
     endtask
 endmodule // tb_extendedtest

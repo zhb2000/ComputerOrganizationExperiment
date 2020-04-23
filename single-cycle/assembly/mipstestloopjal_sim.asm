@@ -2,6 +2,9 @@
 # add, sub, and, or, slt, addi, lw, sw, beq, j, jal
 # If successful, it should write the value 7 to address 84
 
+# Configuration: Compact, Data at Address 0
+# text base address 0x0000_3000, data base address 0x0000_0000
+
 #       Assembly                  Description           Instr   Address Machine
 main:   addi $2, $0, 5          # initialize $2 = 5     00      0       20020005
         addi $3, $0, 12         # initialize $3 = 12    01      4       2003000c
@@ -24,5 +27,5 @@ label2: sw   $2, 84($0)         # write adr 84 = 7      11      44      ac020054
 loop:   j    loop               # dead loop             12      48      08000c12
 
 # $0  = 0  # $1  = 0  # $2  = 7  # $3  = c
-# $4  = 1  # $5  = b  # $7  = 7  # $31 = 40
+# $4  = 1  # $5  = b  # $7  = 7  # $31 = 0x3040
 # [0x50] = 7  [0x54] = 7

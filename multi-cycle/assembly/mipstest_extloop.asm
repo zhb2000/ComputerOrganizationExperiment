@@ -13,7 +13,7 @@
 main:   addi $2, $0, 5      # initialize $2 = 5      0      20020005
         addi $3, $0, 12     # initialize $3 = 12     4      2003000c
         addi $7, $3, -9     # initialize $7 = 3      8      2067fff7 
-        addi $1, $0, 0x304c # initialize $1 = 0x304c c      2001004c
+        addi $1, $0, 0x304c # initialize $1 = 0x304c c      2001304c
 call_a: jalr $31,$1         # jump to cal           10      0020f809
         or   $4, $7, $2     # $4 <= 3 or 5 = 7      14      00e22025
         and  $5, $3, $4     # $5 <= 12 and 7 = 4    18      00642824
@@ -31,7 +31,7 @@ around: slt  $4, $7, $2     # $4 = 3 < 5 = 1        30      00e2202a
         addi $2, $0, 1      # shouldn't happen      48      20020001
 cal:    sll  $7, $7, 1      # $7 << 1 = 6           4c      00073840
 call_b: jal  cal2           # jump to cal2          50      0c000c17
-        addi $31,$0,0x3014  # $31<= 0x3014          54      201f0014
+        addi $31,$0,0x3014  # $31<= 0x3014          54      201f3014
         jr   $31            # return to call_a      58      03e00008
 cal2:   lui  $1, 0x55AA     # $1 <= 0x55AA0000      5c      3c0155aa
         slti $1, $1, 0x55AA # $1 <= 0               60      282155aa

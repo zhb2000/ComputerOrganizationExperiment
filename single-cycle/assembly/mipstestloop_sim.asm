@@ -2,6 +2,9 @@
 # add, sub, and, or, slt, addi, lw, sw, beq, j
 # If successful, it should write the value 7 to address 84
 
+# Configuration: Compact, Data at Address 0
+# text base address 0x0000_3000, data base address 0x0000_0000
+
 #       Assembly                  Description           Instr   Address Machine
 main:   addi $2, $0, 5          # initialize $2 = 5     00      0       20020005
         addi $3, $0, 12         # initialize $3 = 12    01      4       2003000c
