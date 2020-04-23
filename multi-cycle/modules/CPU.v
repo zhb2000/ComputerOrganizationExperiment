@@ -342,7 +342,6 @@ module CPU(clk, rst);
     DataMem dataMem(
         .clk(clk), 
         .DMWr(MEM_MemWrite),
-        .MemRead(MEM_MemRead),
         .MemOp(MEM_MemOp),
         .MemEXT(MEM_MemEXT),
         .address(MEM_aluResult), 
