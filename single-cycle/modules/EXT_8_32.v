@@ -1,5 +1,5 @@
 `include "ctrl_encode_def.v"
-//Extension Module, 8bit -> 32bbit
+//Extension Module, 8bit -> 32bit
 module EXT_8_32(in8, EXTOp, out32 );
      
     input[7:0] in8;

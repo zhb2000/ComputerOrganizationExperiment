@@ -18,7 +18,7 @@ module tb_mipstestloop_sim();
     initial
     begin
         //$readmemh("dat_mipstestloop_sim.txt", cpu.insMem.innerIM.ROM);
-        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/single-cycle/dat/dat_mipstestloop_sim.txt", 
+        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/dat/dat_mipstestloop_sim.txt", 
             cpu.insMem.innerIM.ROM);
         $monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
         _cnt = 0;

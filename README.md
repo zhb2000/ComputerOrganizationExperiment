@@ -3,8 +3,8 @@
 
 ## 实验任务
 ### 单周期
-- [x] 实现单周期CPU，支持15条指令
-- [x] 对单周期CPU进行指令扩展，支持35条指令
+- [x] 实现单周期 CPU，支持 15 条指令
+- [x] 对单周期 CPU 进行指令扩展，支持 35 条指令
 
 ### 多周期
 - [x] 实现流水线（没有解决冒险）
@@ -12,7 +12,8 @@
 - [x] 解决控制冒险
 
 ## 实现的指令
-实现了以下35条指令
+实现了以下 35 条指令
+
 ### R-R运算
 add, sub, and, or, slt, sltu, addu, subu, sll, srl, sra, sllv, srlv, srav, xor, nor 
 ### R-I运算
@@ -34,3 +35,10 @@ j, jal, jr, jalr
 | 32'h0000_3000     | 32'h0000_0000     | MARS Configuration: Compact, Data at Address 0 |
 | 32'h0000_0000     | 32'h0000_2000     | MARS Configuration: Compact, Text at Address 0 |
 | 32'h0000_0000     | 32'h0000_0000     | 指令和数据均从 0 开始编址                      |
+
+## 设计图
+### 单周期
+![single](docs/single.png)
+
+### 多周期
+![multi](docs/multi.png)

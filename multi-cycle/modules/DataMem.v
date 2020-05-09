@@ -36,28 +36,25 @@ module DataMem(
     //prepare write data
     always @(*)
     begin
-        if (DMWr)
-        begin
-            case (MemOp)
-                `MEM_BYTE:
-                begin
-                    case (baseOffset[1:0])
-                        2'd0: indexWriteData = {indexData[31:8], din[7:0]}; 
-                        2'd1: indexWriteData = {indexData[31:16], din[7:0], indexData[7:0]};
-                        2'd2: indexWriteData = {indexData[31:24], din[7:0], indexData[15:0]};
-                        2'd3: indexWriteData = {din[7:0], indexData[23:0]};
-                    endcase
-                end
-                `MEM_HALF:
-                begin
-                    case (baseOffset[1:0])
-                        2'd0: indexWriteData = {indexData[31:16], din[15:0]};
-                        2'd2: indexWriteData = {din[15:0], indexData[15:0]};
-                    endcase
-                end
-                `MEM_WORD: indexWriteData = din;
-            endcase
-        end
+        case (MemOp)
+            `MEM_BYTE:
+            begin
+                case (baseOffset[1:0])
+                    2'd0: indexWriteData = {indexData[31:8], din[7:0]}; 
+                    2'd1: indexWriteData = {indexData[31:16], din[7:0], indexData[7:0]};
+                    2'd2: indexWriteData = {indexData[31:24], din[7:0], indexData[15:0]};
+                    2'd3: indexWriteData = {din[7:0], indexData[23:0]};
+                endcase
+            end
+            `MEM_HALF:
+            begin
+                case (baseOffset[1:0])
+                    2'd0: indexWriteData = {indexData[31:16], din[15:0]};
+                    2'd2: indexWriteData = {din[15:0], indexData[15:0]};
+                endcase
+            end
+            `MEM_WORD: indexWriteData = din;
+        endcase
     end
 
     //print write data
@@ -68,7 +65,7 @@ module DataMem(
             case (MemOp)
                 `MEM_BYTE:
                 begin
-                    $display("store byte, m[%d/4=%d] = 0x%8h", baseOffset, index, indexData);
+                    $display("store byte, m[%d/4=%d] = 0x%8h", baseOffset, index, indexWriteData);
                     $display("inner-address: %d, WD = 0x%2h", baseOffset[1:0], din[7:0]);
                 end
                 `MEM_HALF:
@@ -77,12 +74,12 @@ module DataMem(
                         $display("store half, wrong boundary!");
                     else
                     begin
-                        $display("store half, m[%d/4=%d] = 0x%8h", baseOffset, index, indexData);
+                        $display("store half, m[%d/4=%d] = 0x%8h", baseOffset, index, indexWriteData);
                         $display("inner-address: %d, WD = 0x%4h", baseOffset[1:0], din[15:0]); 
                     end
                 end
                 `MEM_WORD:
-                    $display("store word, m[%d/4=%d] = 0x%8h", baseOffset, index, indexData);
+                    $display("store word, m[%d/4=%d] = 0x%8h", baseOffset, index, indexWriteData);
             endcase
         end
     end

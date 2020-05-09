@@ -26,7 +26,7 @@ module tb_mipstest_extloop();
     initial
     begin
         //$readmemh("dat_mipstestloopjal_sim.txt", cpu.insMem.innerIM.ROM);
-        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/multi-cycle/dat/dat_mipstest_extloop.txt", cpu.insMem.innerIM.ROM);
+        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/dat/dat_mipstest_extloop.txt", cpu.insMem.innerIM.ROM);
         //$monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
         _cnt = 0;
         clk = 0;

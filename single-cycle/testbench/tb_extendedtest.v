@@ -19,7 +19,7 @@ module tb_extendedtest();
     initial
     begin
         //$readmemh("dat_extendedtest.txt", cpu.insMem.innerIM.ROM);
-        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/single-cycle/dat/dat_extendedtest.txt", cpu.insMem.innerIM.ROM);
+        $readmemh("C:/Users/zhb/Desktop/ComputerOrgainzationExperiment/dat/dat_extendedtest.txt", cpu.insMem.innerIM.ROM);
         $monitor("PC = 0x%8h, instruction = 0x%8h", cpu.PC, cpu.inst);
         _cnt = 0;
         clk = 0;
